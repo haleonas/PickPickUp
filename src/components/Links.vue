@@ -1,5 +1,4 @@
 <template>
-
     <div id="nav">
         <router-link to="/">Home</router-link>
         <router-link to="/offers">Offers</router-link>
@@ -17,6 +16,7 @@
     #nav {
         padding: 30px;
         display: flex;
+        font-size: 1.5em;
         justify-content: space-evenly;
     }
 
@@ -27,5 +27,9 @@
 
     #nav a.router-link-exact-active {
         color: #42b983;
+    }
+
+    #nav a:hover{
+        color: red;
     }
 </style>

@@ -19,7 +19,3 @@ import Links from './Links.vue'
         }
     }
 </script>
-
-<style scoped>
-
-</style>
