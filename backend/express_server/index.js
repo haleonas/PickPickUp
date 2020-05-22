@@ -1,9 +1,11 @@
 const express = require('express')
 const sqlite = require('sqlite')
 const sqlite3 = require('sqlite3')
+const cors = require('cors')
 
 const app = express()
 app.use(express.json())
+app.use(cors())
 
 app.get('/', (request, response) => {
   response.send('Hello from Pick & Pick up server')
