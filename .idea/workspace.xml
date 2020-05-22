@@ -19,9 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cac3bd7c-1c69-4c15-b2d7-e27b36874e6a" name="Default Changelist" comment="lksjdf">
-      <change beforePath="$PROJECT_DIR$/express_server/db/pickpickup.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/express_server/db/pickpickup.sqlite" afterDir="false" />
-    </list>
+    <list default="true" id="cac3bd7c-1c69-4c15-b2d7-e27b36874e6a" name="Default Changelist" comment="lksjdf" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -73,6 +71,7 @@
       <workItem from="1589985673197" duration="373000" />
       <workItem from="1589986164567" duration="170000" />
       <workItem from="1589986339113" duration="35000" />
+      <workItem from="1590136108294" duration="159000" />
     </task>
     <task id="LOCAL−00001" summary="made a header for the title of the view and to hold the links">
       <created>1589970416684</created>
@@ -126,6 +125,22 @@
       <screen x="0" y="23" width="1440" height="798" />
     </state>
     <state x="258" y="84" key="DBNavigator.ProjectSettingsDialog/0.23.1440.798@0.23.1440.798" timestamp="1589985785564" />
+    <state width="1398" height="204" key="GridCell.Tab.0.bottom" timestamp="1590136227484">
+      <screen x="0" y="23" width="1440" height="796" />
+    </state>
+    <state width="1398" height="204" key="GridCell.Tab.0.bottom/0.23.1440.796@0.23.1440.796" timestamp="1590136227484" />
+    <state width="1398" height="204" key="GridCell.Tab.0.center" timestamp="1590136227483">
+      <screen x="0" y="23" width="1440" height="796" />
+    </state>
+    <state width="1398" height="204" key="GridCell.Tab.0.center/0.23.1440.796@0.23.1440.796" timestamp="1590136227483" />
+    <state width="1398" height="204" key="GridCell.Tab.0.left" timestamp="1590136227482">
+      <screen x="0" y="23" width="1440" height="796" />
+    </state>
+    <state width="1398" height="204" key="GridCell.Tab.0.left/0.23.1440.796@0.23.1440.796" timestamp="1590136227482" />
+    <state width="1398" height="204" key="GridCell.Tab.0.right" timestamp="1590136227484">
+      <screen x="0" y="23" width="1440" height="796" />
+    </state>
+    <state width="1398" height="204" key="GridCell.Tab.0.right/0.23.1440.796@0.23.1440.796" timestamp="1590136227484" />
     <state x="320" y="161" key="Vcs.Push.Dialog.v2" timestamp="1589977233056">
       <screen x="0" y="23" width="1440" height="796" />
     </state>
