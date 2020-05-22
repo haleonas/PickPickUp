@@ -8,19 +8,23 @@ app.use(cors())
 app.use(express.json())
 app.use(cors())
 
+let database
+
+sqlite
+    .open({ driver: sqlite3.Database, filename: './db/pickpickup.sqlite' })
+    .then(database => {
+        database = database
+    })
+
 app.get('/', (request, response) => {
   response.send('Hello from Pick & Pick up server')
 })
 
 app.get('/stores', (request, response) => {
-  sqlite
-    .open({ driver: sqlite3.Database, filename: './db/pickpickup.sqlite' })
-    .then(database => {
-      database.all('SELECT *FROM stores')
+    database.all('SELECT *FROM stores')
         .then((rows) => {
-          response.status(201).send(rows)
+            response.status(201).send(rows)
         })
-    })
 })
 
 app.listen(3000, () => {
