@@ -44,12 +44,11 @@ app.delete('/products', (request, response) => {
 
 //add a product to the database
 app.post('/products', (request, response) => {
-    database_.run('INSERT INTO products(name,price)values(?,?)', [request.body.name, request.body.price])
-        .then(() => {
-            response.status(200).send({message: 1})
+    database_.run('INSERT INTO products(name,price)values(?,?); SELECT last_insert_rowid()', [request.body.name, request.body.price])
+        .then((rows) => {
+            response.status(200).send(rows/*{message: 1}*/)
         }).catch((error) => {
-        response.status(401).send({message: -1}
-        )
+        response.status(401).send({message: -1})
     })
 })
 
