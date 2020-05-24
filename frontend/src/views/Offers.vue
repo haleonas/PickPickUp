@@ -1,13 +1,14 @@
 <template>
     <div >
         <app-header title-text="Offers"></app-header>
-        <app-product-list></app-product-list>
+        <app-offer-list></app-offer-list>
+
     </div>
 </template>
 
 <script>
     import Header from '../components/Header.vue'
-    import ProductList from "../components/ProductList";
+    import OfferList from "../components/OfferList"
     export default {
         name: "offers",
         beforeMount(){
@@ -20,7 +21,7 @@
         },
         components:{
             appHeader:Header,
-            appProductList: ProductList
+            appOfferList:OfferList
         }
     }
 </script>
