@@ -35,11 +35,16 @@ values ('Apple', 10),
 select *
 from products;
 
+select last_insert_rowid();
+
+insert into products(name, price) values('Pear',15.6);
+
 update products
 set name = 'pear', price = 15
 where productId = 2;
 
 delete FROM products where productId = 4;
+delete FROM products;
 
 insert into offers(description)
 values ('A good combination of Apples, Pears and bananas');
