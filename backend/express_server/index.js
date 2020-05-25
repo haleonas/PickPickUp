@@ -6,7 +6,6 @@ const cors = require('cors')
 const app = express()
 app.use(cors())
 app.use(express.json())
-app.use(cors())
 
 let database_
 
@@ -20,6 +19,7 @@ sqlite
 app.get('/', (request, response) => {
     response.send('Hello from Pick & Pick up server')
 })
+
 
 app.post('/offers', (request, response) => {
     database_.run('INSERT INTO offers(name,description,offerPrice)values(?,?,?); SELECT last_insert_rowid();',

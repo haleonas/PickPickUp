@@ -2,7 +2,6 @@
     <div >
         <app-header title-text="Offers"></app-header>
         <app-offer-list></app-offer-list>
-
     </div>
 </template>
 

@@ -68,7 +68,7 @@
                 let offer = {}
                 offer['name'] = this.name
                 offer['description'] = this.description
-                if(this.offerPrice >= 1){
+                if (this.offerPrice >= 1) {
                     offer['offerPrice'] = this.offerPrice
                 } else {
                     offer['offerPrice'] = this.total
@@ -90,9 +90,9 @@
                     products
                 })
 
-                if(response.data.message === 1){
-                    await this.$router.push({path:'/offers'})
-                } else{
+                if (response.data.message === 1) {
+                    await this.$router.push({path: '/offers'})
+                } else {
                     alert('Something went wrong')
                 }
             },

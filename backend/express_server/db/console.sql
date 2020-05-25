@@ -1,8 +1,9 @@
 create table offers
 (
-    offerId     INTEGER PRIMARY KEY,
+    offerId INTEGER PRIMARY KEY,
     name TEXT,
     description TEXT,
+    /*small description*/
     offerPrice NUMERIC
 );
 
@@ -15,7 +16,6 @@ create table products
     name      TEXT NOT NULL,
     price     NUMERIC NOT NULL
 );
-
 
 create table offersProducts
 (
