@@ -20,6 +20,13 @@ app.get('/', (request, response) => {
     response.send('Hello from Pick & Pick up server')
 })
 
+app.get('/offers',(request, response)=> {
+    database_.all('select offers.offerId, offers.name,offers.description, offers.offerPrice, group_concat(p.name) as products from offers inner join offersProducts oP on offers.offerId = oP.offerId inner join products p on oP.productId = p.productId group by offers.offerId;')
+        .then((rows)=>{
+            response.send(rows)
+        })
+})
+
 
 app.post('/offers', (request, response) => {
     database_.run('INSERT INTO offers(name,description,offerPrice)values(?,?,?); SELECT last_insert_rowid();',

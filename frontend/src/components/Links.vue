@@ -2,7 +2,6 @@
     <div id="nav">
         <router-link to="/">Home</router-link>
         <router-link to="/offers">Offers</router-link>
-        <router-link to="">hej</router-link>
     </div>
 </template>
 
@@ -15,9 +14,11 @@
 <style scoped>
 
     #nav {
-        padding: 30px;
-        display: flex;
+        background: #EAFAFF;
+        box-shadow: .15em .15em #d1d1d1;
+        padding: .75em;
         font-size: 1.5em;
+        display: flex;
         justify-content: space-evenly;
     }
 
@@ -30,7 +31,7 @@
         color: #42b983;
     }
 
-    #nav a:hover{
+    #nav a:hover {
         color: red;
     }
 </style>

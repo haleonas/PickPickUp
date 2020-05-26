@@ -1,6 +1,6 @@
 <template>
     <div id="title">
-        <h1>{{titleText}}</h1>
+        {{titleText}}
     </div>
 </template>
 
@@ -15,4 +15,9 @@
 
 <style scoped>
 
+    #title{
+        padding:.5em;
+        font-size:2.5em;
+        font-weight: bolder;
+    }
 </style>

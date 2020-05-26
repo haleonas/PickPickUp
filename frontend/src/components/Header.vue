@@ -1,21 +1,30 @@
 <template>
-    <div>
-        <app-title  :title-text="titleText"></app-title>
+    <div id="header">
+        <app-page-title></app-page-title>
         <app-links></app-links>
+        <app-title :title-text="titleText"></app-title>
     </div>
 </template>
 
 <script>
-import Title from './Title.vue'
-import Links from './Links.vue'
+    import Title from './Title.vue'
+    import Links from './Links.vue'
+    import PageTitle from "./PageTitle";
+
     export default {
         name: "Header",
-        components : {
+        components: {
             appTitle: Title,
-            appLinks: Links
+            appLinks: Links,
+            appPageTitle: PageTitle
         },
-        props:{
+        props: {
             titleText: String
         }
     }
 </script>
+
+<style scoped>
+
+
+</style>
