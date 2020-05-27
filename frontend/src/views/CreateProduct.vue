@@ -16,16 +16,6 @@ export default {
         'addProduct': AddProduct,
          'appHeader': Header
     },
-
-    created(){
-        fetch('http://localhost:3000')
-        .then(response => response.json())
-        .then(result =>{
-            console.log(result);
-            
-        })
-    }
-
     
 }
 </script>
