@@ -25,6 +25,21 @@
         components: {
             appHeader: Header,
             appOfferList: OfferList
+        },
+        data(){
+            return{
+                total: 1,
+                current: 1,
+                perPage: 3,
+                rangeBefore: 1,
+                rangeAfter: 1,
+                order: '',
+                size: '',
+                isSimple: false,
+                isRounded: false,
+                prevIcon: 'chevron-left',
+                nextIcon: 'chevron-right'
+            }
         }
     }
 </script>

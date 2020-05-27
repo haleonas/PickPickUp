@@ -4,13 +4,17 @@
             <app-header title-text="Add Offer"></app-header>
             <form id="add-offer-form">
                 <p>
-                    <label for="name">Name of Offers: </label>
-                    <input type="text" id="name" v-model="name"/>
+                    <b-field label="Name of Offer: ">
+                        <b-input v-model="name"/>
+                    </b-field>
+
                 </p>
                 <p>
-                    <label for="name">Description of Offers: </label>
+                    <b-field label="Offer Description">
+                        <b-input type="textarea" v-model="description">
+                        </b-input>
+                    </b-field>
                     <br>
-                    <textarea type="text" id="offer-description" v-model="description" rows="5" cols="40"/>
                 </p>
                 <div>
                     Products
@@ -19,9 +23,13 @@
                         <br>
                         Price: {{product.price}}
                         <br>
-                        <input type="number" @change="calcTotal" v-model="amounts[`price${index}`]">
+                        <b-field>
+                            <b-input type="number" min="0"  @change.native="calcTotal" v-model="amounts[`price${index}`]" ></b-input>
+                        </b-field>
                         <hr>
                     </div>
+
+
                 </div>
                 Total cost of products: {{total}}
                 <br>
@@ -112,11 +120,7 @@
             calcTotal() {
                 this.total = 0
                 for (let i = 0; i < this.products.length; ++i) {
-                    if (this.amounts[`price${i}`] < 0) {
-                        this.amounts[`price${i}`] = 0
-                    } else {
                         this.total += (this.amounts[`price${i}`] * this.products[i]['price'])
-                    }
                 }
             }
         }
@@ -142,15 +146,6 @@
 
     #add-offer-btn {
         margin-top: 1.5em;
-    }
-
-    textarea {
-        border-radius: 5px;
-        font-family: 'Hind', sans-serif;
-        box-shadow: .15em .15em #d1d1d1;
-        border: 1px solid #b1b1b1;
-        resize: none;
-
     }
 
 </style>

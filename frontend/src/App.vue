@@ -45,8 +45,4 @@
         border-radius: 10px;
     }
 
-    body {
-        margin: 0;
-    }
-
 </style>

@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Offers from '../views/Offers.vue'
 import AddOffer from "../views/AddOffer";
+import test from "../views/test";
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,11 @@ const routes = [
     path: '/addoffer',
     name: 'AddOffer',
     component: AddOffer
+  },
+  {
+    path: '/test',
+    name: 'Test',
+    component: test
   }
 ]
 
