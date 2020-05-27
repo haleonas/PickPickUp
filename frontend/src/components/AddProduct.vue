@@ -7,7 +7,7 @@
     <br />
     <label>Add product's price:</label>
     <br />
-    <input type="text" v-model="price" placeholder="Product price..." />
+    <input type="number" min="0" v-model="price" placeholder="Product price..." />
     <br />
 
     <button @click="addProduct">Add</button>
@@ -23,15 +23,35 @@ export default {
   data() {
     return {
       name: "",
-      price: "",
+      price: 0,
       item: ""
     }
   },
 
 methods: {
-    addProduct(){
+
+    async addProduct(){
+      if(this.name){
         this.item = 'A new item added: '  + this.name + ' ' + this.price + 'kr'
+        const response = await fetch("http://localhost:3000/products", {
+                        "method": "POST",
+                        "headers": {
+                            "content-type": "application/json"
+                        },
+                        "body":
+                            JSON.stringify({ name:this.name, price: this.price })
+                    })
+         const data = await response.json() 
+         if(data.message === 1){
+           this.$router.push({path: '/products'})
+         } else {
+           alert('Something went wrong!')
+         }
+                   
+    } else {
+      alert('Please enter the name of your product')
     }
+    } 
 
 }
 

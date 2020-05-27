@@ -16,16 +16,27 @@ sqlite
         database_ = database
     })
 
-app.get('/', (request, response) => {
-  response.send('Hello from Pick & Pick up server')
+    app.get('/products', (request, response) => {
+      database_.all('SELECT *from products')
+          .then((rows) => {
+              response.status(200).send(rows)
+          }).catch(() => {
+          response.status(401).send({message: -1}
+          )
+      })
+  })
+
+
+app.post('/products', (request,response) => {
+    database_.run('INSERT INTO products (name, price) VALUES (?,?)',
+    [request.body.name, request.body.price] )
+    .then(() =>{
+      response.send({message: 1})
+    }).catch(() => {
+      response.send({message: -1})
+    })
 })
 
-app.get('/stores', (request, response) => {
-    database_.all('SELECT *FROM stores')
-        .then((rows) => {
-            response.status(201).send(rows)
-        })
-})
 
 app.listen(3000, () => {
   console.log('Server is running')
