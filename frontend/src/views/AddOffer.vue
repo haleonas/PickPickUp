@@ -18,7 +18,22 @@
                 </p>
                 <div>
                     Products
-                    <div v-for="(product,index) in products" :key="product.productId">
+
+                    <b-pagination
+                            :total="products.length"
+                            :current.sync="current"
+                            :range-before="rangeBefore"
+                            :range-after="rangeAfter"
+                            :order="order"
+                            :size="size"
+                            :simple="isSimple"
+                            :rounded="isRounded"
+                            :per-page="perPage"
+                            :icon-prev="prevIcon"
+                            :icon-next="nextIcon">
+                    </b-pagination>
+
+                    <div v-for="(product,index) in paginatedItems" :key="product.productId">
                         Product name: {{product.name}}
                         <br>
                         Price: {{product.price}}
@@ -29,12 +44,27 @@
                         <hr>
                     </div>
 
+                    <b-pagination
+                            :total="products.length"
+                            :current.sync="current"
+                            :range-before="rangeBefore"
+                            :range-after="rangeAfter"
+                            :order="order"
+                            :size="size"
+                            :simple="isSimple"
+                            :rounded="isRounded"
+                            :per-page="perPage"
+                            :icon-prev="prevIcon"
+                            :icon-next="nextIcon">
+                    </b-pagination>
+
 
                 </div>
-                Total cost of products: {{total}}
+                Total cost of products: {{totalsum}}
                 <br>
-                <label for="offerPrice">Price for the offer: </label>
-                <input type="number" v-model="offerPrice" id="offerPrice">
+                <b-field label="Price for the offer:">
+                    <b-input type="number" min="0" v-model="offerPrice"/>
+                </b-field>
                 <br>
                 <button @click.prevent="addOffer" id="add-offer-btn">Send</button>
                 <div v-if="sendError">Fields incorrectly filled</div>
@@ -54,13 +84,32 @@
                 description: "",
                 products: [],
                 amounts: {},
-                total: 0,
+                totalsum: 0,
                 offerPrice: 0,
-                sendError: false
+                sendError: false,
+
+                total: 1,
+                current: 1,
+                perPage: 3,
+                rangeBefore: 1,
+                rangeAfter: 1,
+                order: 'is-centered',
+                size: '',
+                isSimple: false,
+                isRounded: true,
+                prevIcon: 'arrow-left',
+                nextIcon: 'arrow-right'
+
             }
         },
         components: {
             appHeader: Header
+        },
+        computed: {
+            paginatedItems() {
+                let page_number = this.current - 1
+                return this.products.slice(page_number * this.perPage, (page_number + 1) * this.perPage)
+            }
         },
         beforeMount() {
             this.getProducts()
@@ -120,7 +169,7 @@
             calcTotal() {
                 this.total = 0
                 for (let i = 0; i < this.products.length; ++i) {
-                        this.total += (this.amounts[`price${i}`] * this.products[i]['price'])
+                        this.totalsum += (this.amounts[`price${i}`] * this.products[i]['price'])
                 }
             }
         }
@@ -147,5 +196,4 @@
     #add-offer-btn {
         margin-top: 1.5em;
     }
-
 </style>

@@ -27,7 +27,6 @@ app.get('/offers',(request, response)=> {
         })
 })
 
-
 app.post('/offers', (request, response) => {
     database_.run('INSERT INTO offers(name,description,offerPrice)values(?,?,?); SELECT last_insert_rowid();',
         [request.body.offer.name, request.body.offer.description, request.body.offer.offerPrice])
@@ -41,7 +40,6 @@ app.post('/offers', (request, response) => {
                 })
             }
             response.send({message:1})
-            //rows.lastID
         }).catch(() => {
         response.send({message:-1})
     })
@@ -53,8 +51,7 @@ app.get('/products', (request, response) => {
         .then((rows) => {
             response.status(200).send(rows)
         }).catch(() => {
-        response.status(401).send({message: -1}
-        )
+        response.status(401).send({message: -1})
     })
 })
 
@@ -64,16 +61,6 @@ app.delete('/products', (request, response) => {
         .then(() => {
             response.status(200).send({message: 1})
         }).catch(() => {
-        response.status(401).send({message: -1})
-    })
-})
-
-//add a product to the database
-app.post('/products', (request, response) => {
-    database_.run('INSERT INTO products(name,price)values(?,?)', [request.body.name, request.body.price])
-        .then((rows) => {
-            response.status(200).send(rows/*{message: 1}*/)
-        }).catch((error) => {
         response.status(401).send({message: -1})
     })
 })
@@ -94,7 +81,3 @@ app.put('/products', (request, response) => {
 app.listen(3000, () => {
     console.log('Server is running')
 })
-
-
-
-
