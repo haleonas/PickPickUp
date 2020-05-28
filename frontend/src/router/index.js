@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Offers from '../views/Offers.vue'
 import Products from '../views/Products.vue'
 import CreateProduct from '../views/CreateProduct.vue'
+import AddOffer from "../views/AddOffer";
 
 Vue.use(VueRouter)
 
@@ -28,6 +29,11 @@ const routes = [
     name: 'Create-product',
     component: CreateProduct
   },
+  {
+    path: '/addoffer',
+    name: 'AddOffer',
+    component: AddOffer
+  }
 ]
 
 const router = new VueRouter({
