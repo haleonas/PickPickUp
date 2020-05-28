@@ -1,0 +1,43 @@
+<template>
+  <div>
+    <h2>Product list</h2>
+    <ul>
+      <li :key="product.id" v-for="product in products">{{product.name}} - {{product.price}} kr</li>
+    </ul>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "List",
+
+  data() {
+    return {
+          products: []
+    }
+  },
+
+  props: {
+    source: {
+      type: Array
+    }
+  },
+
+  beforeMount() {
+    this.getProductsList();
+  },
+
+  methods: {
+    getProductsList() {
+      fetch("http://localhost:3000/products")
+      .then(response => response.json())
+      .then(result => {
+        this.products = result        
+      })
+      }
+    }
+  }
+</script>
+
+<style scoped>
+</style>

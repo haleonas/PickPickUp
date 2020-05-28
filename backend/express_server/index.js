@@ -16,8 +16,9 @@ sqlite
         database_ = database
     })
 
+
     app.get('/products', (request, response) => {
-      database_.all('SELECT *from products')
+      database_.all('SELECT * from products')
           .then((rows) => {
               response.status(200).send(rows)
           }).catch(() => {
