@@ -1,14 +1,14 @@
 <template>
   <div id="add">
     <h2>Add new item</h2>
-    <label>Add product's name:</label>
     <br />
-    <input type="text" v-model="name" placeholder="Product name..." />
+    <b-field label="Add product's name:">
+      <b-input type="text" v-model="name" placeholder="Product name..."/>
+    </b-field>
     <br />
-    <label>Add product's price:</label>
-    <br />
-    <input type="number" min="0" v-model="price" placeholder="Product price..." />
-    <br />
+    <b-field label="Add product's price:">
+      <b-input type="number" min="0" v-model="price" placeholder="Product price..."/>
+    </b-field>
 
     <button @click="addProduct">Add</button>
     <br />
@@ -43,7 +43,7 @@ methods: {
                     })
          const data = await response.json() 
          if(data.message === 1){
-           this.$router.push({path: '/products'})
+           await this.$router.push({path: '/products'})
          } else {
            alert('Something went wrong!')
          }
@@ -59,8 +59,5 @@ methods: {
 </script>
 
 <style scoped>
-input {
-  border: 1px solid black;
-  margin: 5px;
-}
+
 </style>
