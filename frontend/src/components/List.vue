@@ -17,12 +17,6 @@ export default {
     }
   },
 
-  props: {
-    source: {
-      type: Array
-    }
-  },
-
   beforeMount() {
     this.getProductsList();
   },
