@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Product list</h2>
+    <h2>Available products</h2>
     <ul>
       <li :key="product.id" v-for="product in products">{{product.name}} - {{product.price}} kr</li>
     </ul>
@@ -27,6 +27,13 @@ export default {
       .then(response => response.json())
       .then(result => {
         this.products = result        
+      console.log(result);
+      
+        
+      })
+      .catch(() =>{
+        console.log({message: -1});
+        
       })
       }
     }
