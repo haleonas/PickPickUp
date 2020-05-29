@@ -32,10 +32,4 @@
         margin: .25em;
         padding: .5em;
     }
-
-
-
-
-
-
 </style>

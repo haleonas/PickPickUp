@@ -15,6 +15,14 @@
             'addProduct': AddProduct,
             'appHeader': Header
         },
+        beforeMount() {
+            this.setTitle()
+        },
+        methods:{
+            setTitle(){
+                document.title = 'Add Products'
+            }
+        }
 
     }
 </script>

@@ -12,6 +12,13 @@
         name: "Home",
         components: {
             appHeader: Header
+        },beforeMount() {
+            this.setTitle()
+        },
+        methods:{
+            setTitle(){
+                document.title = 'Home'
+            }
         }
     }
 </script>
