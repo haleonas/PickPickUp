@@ -18,12 +18,12 @@ sqlite
         database_ = database
     })
 
-server.listen(3000,()=>{
+server.listen(3000, () => {
     console.log('Server is listening')
 })
 
-io.on('connection',(socket)=>{
-    socket.on('user disconnected',()=>{
+io.on('connection', (socket) => {
+    socket.on('user disconnected', () => {
         console.log('user disconnected')
     })
 
@@ -31,9 +31,9 @@ io.on('connection',(socket)=>{
         //userOBj = {orderedBy: "Jesper", offerId: 15}
 
         await database_.all('SELECT * FROM orders WHERE orderId = ?', [msg.orderId])
-            .then(async (rows)=>{
+            .then(async (rows) => {
                 console.log(rows)
-                await socket.emit('msg',rows[0])
+                await socket.emit('msg', rows[0])
             })
 
         console.log(msg)
@@ -48,9 +48,6 @@ app.get('/', (request, response) => {
     //response.send('Hello from Pick & Pick up server')
 })
 
-
-
-
 app.get('/products', (request, response) => {
     database_.all('SELECT *from products')
         .then((rows) => {
@@ -60,7 +57,6 @@ app.get('/products', (request, response) => {
         )
     })
 })
-
 
 app.post('/products', (request, response) => {
     database_.run('INSERT INTO products (name, price) VALUES (?,?)',
@@ -72,8 +68,8 @@ app.post('/products', (request, response) => {
     })
 })
 
-app.get('/offerproducts',(request,response)=>{
-    database_.all('select products.name, oP.amount from products inner join offersProducts oP on products.productId = oP.productId where oP.offerId = ?;',[request.query.offerId])
+app.get('/offerproducts', (request, response) => {
+    database_.all('select products.name, oP.amount from products inner join offersProducts oP on products.productId = oP.productId where oP.offerId = ?;', [request.query.offerId])
         .then(rows => {
             response.send(rows)
         })
@@ -81,8 +77,8 @@ app.get('/offerproducts',(request,response)=>{
 
 app.get('/offers', (request, response) => {
 
-    if(request.query.offerId){
-        database_.all('select offers.name, offers.offerPrice from offers where offers.offerId = ?;',[request.query.offerId])
+    if (request.query.offerId) {
+        database_.all('select offers.name, offers.offerPrice from offers where offers.offerId = ?;', [request.query.offerId])
             .then((rows) => {
                 response.send(rows)
             })
@@ -130,7 +126,7 @@ app.post('/orders', async (request, response) => {
         })
 
     await database_.run('INSERT INTO orders(orderedBy,status,qrCode,amount,offerid) VALUES(?,?,?,?,?);', [request.body.orderedBy, 'awaiting response', qrCode, request.body.amount, request.body.offerId])
-        .then(()=> {
+        .then(() => {
             console.log('yay')
         })
         .catch((error) => {
@@ -138,13 +134,13 @@ app.post('/orders', async (request, response) => {
         })
     await database_.all('SELECT * FROM orders WHERE orderId = (SELECT MAX(orderId) from orders)')
         .then((rows) => {
-           response.send(rows)
+            response.send(rows)
         })
 })
 
 app.put('/orders', (request, response) => {
     //orderId & status
-    database_.run('UPDATE orders SET status = ? where orderId = ?', [request.body.status,request.body.orderId])
+    database_.run('UPDATE orders SET status = ? where orderId = ?', [request.body.status, request.body.orderId])
         .then(() => {
             response.send('YAY')
         })
