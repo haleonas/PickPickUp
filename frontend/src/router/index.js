@@ -6,6 +6,7 @@ import Products from '../views/Products.vue'
 import CreateProduct from '../views/CreateProduct.vue'
 import AddOffer from "../views/AddOffer"
 import Orders from "../views/Orders";
+import EditProduct from "../views/EditProduct";
 
 Vue.use(VueRouter)
 
@@ -39,6 +40,12 @@ const routes = [
     path: '/orders',
     name: 'Orders',
     component: Orders
+  },
+  {
+    path: '/editproduct',
+    name: 'EditProduct',
+    component: EditProduct,
+    props: true
   }
 ]
 

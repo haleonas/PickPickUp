@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="products">
         <app-header title-text="Products"></app-header>
         <router-link to="/products/addProduct">Add new item</router-link>
         <list></list>
@@ -29,4 +29,11 @@
     a:hover {
         color: red;
     }
+    #products {
+        flex-basis: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
 </style>
