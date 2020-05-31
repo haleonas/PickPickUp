@@ -41,7 +41,6 @@ values ('Apple', 10),
 
 select *
 from products;
-
 insert into products(name, price) values('Pear',15.6);
 
 update products
