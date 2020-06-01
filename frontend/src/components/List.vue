@@ -4,7 +4,7 @@
         <ul id="product-list">
             <li :key="product.id" v-for="product in products">
                 <p>{{product.name}} - {{product.price}} kr </p>
-                <router-link :to="{ name: 'EditProduct',params: { product: product}}">
+                <router-link :to="{ name: 'EditProduct',params: { productObject: product}}">
                     Edit
                 </router-link>
             </li>
@@ -40,7 +40,7 @@
 
                     })
             },
-            setTitle(){
+            setTitle() {
                 document.title = "Product list"
             }
         }
@@ -58,7 +58,8 @@
         padding: .5em;
         align-self: center;
     }
-    #product-list{
+
+    #product-list {
         display: flex;
         flex-direction: column;
     }

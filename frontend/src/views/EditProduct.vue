@@ -1,20 +1,16 @@
-
 <template>
-    <div>
+    <div id="edit-offer">
         <app-header title-text="Edit product"></app-header>
 
-        {{product}}
 
-         Id: {{productObject["productId"]}}
-        <form id="labels">
-            <p>
-                <label for="name">Current name: </label>
-                <input type="text" v-model="productObject['name']" id="name">
-            </p>
-            <p>
-                <label for="price">Current price: </label>
-                <input type="text" v-model="productObject['price']" id="price">
-            </p>
+        <form id="edit-offer-item">
+            Id: {{productObject["productId"]}}
+                <b-field label="Current name:">
+                    <b-input type="text" v-model="productObject['name']" id="name"></b-input>
+                </b-field>
+                <b-field label="Current price:">
+                    <b-input type="text" v-model="productObject['price']" id="price"></b-input>
+                </b-field>
             <button @click="updateProduct" id="update-product-btn">Update</button>
             <button @click="deleteProduct" id="delete-product-btn">Delete</button>
         </form>
@@ -24,10 +20,11 @@
 <script>
 
     import Header from "../components/Header";
+
     export default {
         name: "EditProduct",
-        components:{appHeader: Header},
-      props: {productObject: Object},
+        components: {appHeader: Header},
+        props: {productObject: Object},
         methods: {
             async deleteProduct() {
                 const response = await fetch("http://localhost:3000/products", {
@@ -43,7 +40,7 @@
                 } else {
                     alert("Something went wrong")
                 }
-                },
+            },
             async updateProduct() {
                 const response = await fetch("http://localhost:3000/products", {
                     "method": "PUT",
@@ -55,15 +52,15 @@
                 const data = response.json()
                 if (data['message'] === -1) {
                     alert('Something went wrong')
-                    }
                 }
             }
-        }   
+        }
+    }
 </script>
 
 <style scoped>
 
-  #labels {
+    #labels {
         display: flex;
         flex-direction: column;
         flex-basis: 100%;
@@ -76,6 +73,18 @@
 
     #update-product-btn {
         margin-top: 1.5em;
+    }
+    #edit-offer-item{
+        width: 25%;
+        background: #EAFAFF;
+        box-shadow: .15em .15em #d1d1d1;
+        padding: 1.5em;
+        border-radius: 20px;
+        align-self: center;
+    }
+    #edit-offer{
+        display: flex;
+        flex-direction: column;
     }
 
 </style>
