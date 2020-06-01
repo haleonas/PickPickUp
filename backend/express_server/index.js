@@ -148,3 +148,24 @@ app.put('/orders', (request, response) => {
             response.send('NAY')
         })
 })
+
+app.put('/products', (request, response) => {
+    database_.run('UPDATE products SET name = ?, price where productId = ?',
+    [request.body.name, request.body.price, request.body.productId])
+        .then(() => {
+       response.send ({message : 1})
+        })  .catch (() => {
+            response.send ({message : -1})
+        })     
+})
+
+app.delete('/products', (request, response) => {
+    database_.run('DELETE FROM products where productId = ?',
+    [request.body.productId])
+    .then(() => {
+        response.send ({message : 1})
+         })  .catch (() => {
+             response.send ({message : -1})
+         })        
+    })
+ 
