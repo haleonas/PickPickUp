@@ -2,13 +2,14 @@ const express = require('express')
 const sqlite = require('sqlite')
 const sqlite3 = require('sqlite3')
 const cors = require('cors')
+const fileUpload = require('express-fileupload')
 
 const app = express()
 const server = require('http').createServer(app)
 const io = require('socket.io')(server)
 
-app.use(cors())
-app.use(express.json())
+app.use(cors(), express.json(), fileUpload())
+
 
 let database_
 
@@ -44,7 +45,6 @@ io.on('connection', (socket) => {
 //starting page
 app.get('/', (request, response) => {
     response.sendFile(__dirname + '/index.html')
-
     //response.send('Hello from Pick & Pick up server')
 })
 
@@ -76,7 +76,6 @@ app.get('/offerproducts', (request, response) => {
 })
 
 app.get('/offers', (request, response) => {
-
     if (request.query.offerId) {
         database_.all('select offers.name, offers.offerPrice from offers where offers.offerId = ?;', [request.query.offerId])
             .then((rows) => {
@@ -108,6 +107,21 @@ app.post('/offers', (request, response) => {
     })
 })
 
+app.post('/upload', (request, response) => {
+
+    const image = request.files.image
+    const fileName = request.files.image.name
+    const path = `./assets/${fileName}`
+
+    image.mv(path, (error) => {
+        console.error(error)
+        if(error){
+            return response.send({message: error})
+        }
+        response.send({message: 1})
+    })
+})
+
 app.get('/orders', (request, response) => {
     database_.all('SELECT * FROM orders order by case when status = \'in progress\' then 1 when status = \'declined\' then 2 when status = \'completed\' then 3 end;')
         .then((rows) => {
@@ -118,6 +132,14 @@ app.get('/orders', (request, response) => {
         })
 })
 
+/*
+timestamp
+sätt i databasen
+
+frontend
+skriva ut olika tids gränser  beroende på vilken tid det är kvar
+*/
+
 app.post('/orders', async (request, response) => {
     let qrCode = `${request.body.orderedBy}`
     await database_.all('SELECT name FROM offers where offerId = ?', [request.body.offerId])
@@ -125,7 +147,7 @@ app.post('/orders', async (request, response) => {
             qrCode += ' ' + await rows[0].name
         })
 
-    await database_.run('INSERT INTO orders(orderedBy,status,qrCode,amount,offerid) VALUES(?,?,?,?,?);', [request.body.orderedBy, 'awaiting response', qrCode, request.body.amount, request.body.offerId])
+    await database_.run('INSERT INTO orders(orderedBy,status,qrCode,amount,offerid,orderTime) VALUES(?,?,?,?,?,?);', [request.body.orderedBy, 'awaiting response', qrCode, request.body.amount, request.body.offerId, request.body.timeStamp])
         .then(() => {
             console.log('yay')
         })
