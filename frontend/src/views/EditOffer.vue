@@ -4,12 +4,6 @@
 
   <div id="edit-offer">
   <app-header title-text="Edit Offer"></app-header>
-  <form id="edit-offer-form" @submit="setofferID">
-  <input type="text" v-model="offerId" number>
-  <p><input type="submit" value="Submit"></p>
-  </form>
-
-
             <form id="edit-offer-form">
                 <p>
                     <b-field label="Name of Offer: ">
