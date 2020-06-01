@@ -6,9 +6,13 @@
         <p> Ordered By: {{order.orderedBy}}</p>
         <p> Amount: {{order.amount}}</p>
         <p> Offer: {{offer.name}}</p>
-        <p> Total price: {{offer.offerPrice * order.amount}}:-</p>
+        <p> Total price: {{(offer.offerPrice * order.amount).toFixed(2)}}:-</p>
+        <p> Time to delivery: {{timeMessage}}</p>
+        <p> Delivery Time: {{deliveryTime}}</p>
         Products:
-        <li v-for="(product,index) in products" :key="index">{{product.amount}} {{product.name}}/s</li>
+        <li v-for="(product,index) in products" :key="index">
+            {{product.amount * order.amount}} {{product.name}}/s
+        </li>
         <section v-if="order.status !=='completed' && order.status !=='declined'">
             <span v-if="!accepted && order.status !=='in progress' ">
                 <button @click="acceptOrder"> Accept</button> <button @click="declineOrder"> Decline</button>
@@ -17,12 +21,12 @@
                 <button @click="orderComplete">Completed?</button>
             </span>
         </section>
-
     </div>
 </template>
 
 <script>
     import axios from 'axios'
+    import moment from 'moment'
 
     export default {
         name: "OrderItem",
@@ -30,6 +34,8 @@
             return {
                 products: [],
                 offer: {},
+                timeMessage: "",
+                deliveryTime: Date,
                 accepted: "",
                 completed: false
             }
@@ -40,10 +46,40 @@
         beforeMount() {
             this.getOffer()
             this.getProducts()
+            this.calcTime()
         },
         methods: {
-            async getOffer() {
+            async calcTime() {
+                const timeLeft = this.order.orderTime - moment().unix()
 
+                switch (true) {
+                    case timeLeft > 3600: {
+                        this.timeMessage = "More than 1hour left"
+                        break
+                    }
+                    case timeLeft < 3600 && timeLeft > 600: {
+
+                        this.timeMessage = "Less than 1hour left"
+                        break
+                    }
+                    case timeLeft < 600 && timeLeft > 0: {
+                        this.timeMessage = "Less than 10min left"
+                        break
+                    }
+                    case timeLeft < 0: {
+                        this.timeMessage = "Delivery time"
+                        break
+                    }
+                    default: {
+                        console.log('lol va i')
+                        break
+                    }
+                }
+
+                this.deliveryTime = moment.unix(this.order.orderTime).format('DD-MM-YYYY HH:mm:ss')
+
+            },
+            async getOffer() {
                 const response = await axios.get('http://localhost:3000/offers', {
                     params: {
                         offerId: this.order.offerId
@@ -62,6 +98,8 @@
                     }
                 })
                 this.products = response.data
+
+
             },
             async acceptOrder() {
                 //skicka status (in progress) till servern
@@ -117,5 +155,4 @@
         margin: .25em;
         padding: .5em;
     }
-
 </style>
