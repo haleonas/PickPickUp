@@ -9,7 +9,7 @@
                     <b-input type="text" v-model="productObject['name']" id="name"></b-input>
                 </b-field>
                 <b-field label="Current price:">
-                    <b-input type="text" v-model="productObject['price']" id="price"></b-input>
+                    <b-input type="number" min="0" v-model="productObject['price']" id="price"></b-input>
                 </b-field>
             <button @click="updateProduct" id="update-product-btn">Update</button>
             <button @click="deleteProduct" id="delete-product-btn">Delete</button>
@@ -18,7 +18,6 @@
 </template>
 
 <script>
-
     import Header from "../components/Header";
 
     export default {
@@ -52,6 +51,8 @@
                 const data = response.json()
                 if (data['message'] === -1) {
                     alert('Something went wrong')
+                } else {
+                    await this.$router.push({path: "/products"})
                 }
             }
         }
@@ -86,5 +87,4 @@
         display: flex;
         flex-direction: column;
     }
-
 </style>
