@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="3a6b1278-343f-40ad-968d-9f492b74df68" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/backend/express_server/db/console.sql" beforeDir="false" afterPath="$PROJECT_DIR$/backend/express_server/db/console.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/express_server/db/pickpickup.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/backend/express_server/db/pickpickup.sqlite" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/express_server/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/express_server/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/express_server/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/express_server/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/express_server/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/express_server/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/OfferList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/OfferList.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/router/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/Offers.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/Offers.vue" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1cczFQhJ5buTlkMTCD2YpZdmic4" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3a6b1278-343f-40ad-968d-9f492b74df68" name="Default Changelist" comment="" />
+      <created>1590842566035</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1590842566035</updated>
+      <workItem from="1590842572982" duration="7000" />
+      <workItem from="1590842818464" duration="1868000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="442" y="243" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1590842920207">
+      <screen x="0" y="23" width="1440" height="822" />
+    </state>
+    <state x="442" y="243" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1440.822@0.23.1440.822" timestamp="1590842920207" />
+    <state x="258" y="96" key="DBNavigator.ProjectSettingsDialog" timestamp="1590842987750">
+      <screen x="0" y="23" width="1440" height="822" />
+    </state>
+    <state x="258" y="96" key="DBNavigator.ProjectSettingsDialog/0.23.1440.822@0.23.1440.822" timestamp="1590842987750" />
+  </component>
+</project>

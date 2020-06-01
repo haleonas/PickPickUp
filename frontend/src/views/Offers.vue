@@ -2,6 +2,7 @@
     <div id="offers">
         <app-header title-text="Offers"></app-header>
         <router-link to="/addoffer">Add Offer</router-link>
+        <router-link to="/editoffer">Edit Offer</router-link>
         <hr>
         <app-offer-list id="offer-list"></app-offer-list>
     </div>

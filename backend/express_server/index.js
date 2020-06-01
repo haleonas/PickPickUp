@@ -52,7 +52,7 @@ app.get('/', (request, response) => {
 
 
 app.get('/products', (request, response) => {
-    database_.all('SELECT *from products')
+    database_.all('SELECT * from products')
         .then((rows) => {
             response.status(200).send(rows)
         }).catch(() => {
@@ -72,17 +72,18 @@ app.post('/products', (request, response) => {
     })
 })
 
-app.get('/offerproducts',(request,response)=>{
-    database_.all('select products.name, oP.amount from products inner join offersProducts oP on products.productId = oP.productId where oP.offerId = ?;',[request.query.offerId])
-        .then(rows => {
-            response.send(rows)
+app.get('/offerproducts', (request, response) => {
+    database_.all('SELECT * FROM products INNER JOIN offersProducts on products.productId = offersProducts.productId where offersProducts.offerId = ?;',[request.query.offerId])
+    .then((rows) => {
+        response.send(rows)
         })
 })
+
 
 app.get('/offers', (request, response) => {
 
     if(request.query.offerId){
-        database_.all('select offers.name, offers.offerPrice from offers where offers.offerId = ?;',[request.query.offerId])
+        database_.all('select * from offers where offers.offerId = ?;',[request.query.offerId])
             .then((rows) => {
                 response.send(rows)
             })
@@ -151,4 +152,24 @@ app.put('/orders', (request, response) => {
         .catch(() => {
             response.send('NAY')
         })
+})
+
+
+
+app.put('/editoffer', (request, response) => {
+    database_.run('UPDATE offers SET (name,description,offerPrice) values (?,?,?) where offerId = ?',
+        [request.body.offer.name, request.body.offer.description, request.body.offer.offerPrice, request.query.offerId])
+        .then((rows) => {
+            const products = request.body.products
+            const offerId = rows.offerId
+            for (let i = 0; i < products.length; ++i) {
+                database_.run('UPDATE offersProducts SET (productId,amount) VALUES(?,?,?) where offerId = ?', [products[i].productId, products[i].amount, offerId])
+                    .catch((error) => {
+                        response.send(error)
+                    })
+            }
+            response.send({message: 1})
+        }).catch(() => {
+        response.send({message: -1})
+    })
 })

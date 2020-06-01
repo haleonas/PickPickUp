@@ -1,3 +1,18 @@
+select * from offersProducts;
+
+SELECT products.name, offersProducts.amount FROM products INNER JOIN offersProducts on products.productId = offersProducts.productId where offersProducts.offerId = ?;
+
+
+
+
+SELECT Course.CourseName, Categorie.CategorieName
+FROM Categorie
+INNER JOIN CourseCategorie
+on Categorie.CategorieID = CourseCategorie.CoCaCategorieID
+INNER JOIN Course
+on CourseCategorie.CoCaCourseID = Course.CourseID;
+
+
 create table offers
 (
     offerId INTEGER PRIMARY KEY,
@@ -7,7 +22,7 @@ create table offers
     offerPrice NUMERIC
 );
 
-select *from offers;
+select * from offers;
 select last_insert_rowid() as lastID;
 
 create table products
@@ -23,7 +38,7 @@ create table offersProducts
     productId INTEGER,
     amount    INTEGER
 );
-select *from offersProducts;
+select * from offersProducts;
 
 create table orders
 (
@@ -62,6 +77,7 @@ values (1, 1, 3),
        (1, 3, 5);
 select offerId, productId, amount
 from offersProducts;
+
 
 select offers.description,
        products.name as productname,
