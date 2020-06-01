@@ -21,7 +21,6 @@
                 products: []
             }
         },
-
         beforeMount() {
             this.getProductsList();
             this.setTitle()

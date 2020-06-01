@@ -172,7 +172,7 @@ app.put('/orders', (request, response) => {
 })
 
 app.put('/products', (request, response) => {
-    database_.run('UPDATE products SET name = ?, price where productId = ?',
+    database_.run('UPDATE products SET name = ?, price = ? where productId = ?',
     [request.body.name, request.body.price, request.body.productId])
         .then(() => {
        response.send ({message : 1})
