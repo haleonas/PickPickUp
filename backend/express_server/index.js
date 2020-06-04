@@ -173,14 +173,11 @@ app.put('/orders', (request, response) => {
     socket.on('userObj', async () => {
 
         var ordId = request.body.orderId
-        var status = request.body.status
-
+       
         //finding the correct object in the array
         let obj = connectedUsers.find(obj => obj.order == ordId)
-      
 
-
-        switch (obj) {
+        switch (obj.status) {
             case 1:
                 //sending message from a server to a customer
                 io.sockets.socket(socket.id).emit('userObj', { message: 'Your order has been declined' })
