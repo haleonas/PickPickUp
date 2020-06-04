@@ -3,13 +3,19 @@ const sqlite = require('sqlite')
 const sqlite3 = require('sqlite3')
 const cors = require('cors')
 const fileUpload = require('express-fileupload')
+const rateLimit = require('express-rate-limit')
 
 const app = express()
 const server = require('http').createServer(app)
 const io = require('socket.io')(server)
 
-app.use(cors(), express.json(), fileUpload())
+const limiter = rateLimit({
+    windowsMs: 1 * 60 * 1000, //minutes * seconds * milliseconds
+    max: 5, //number of orders
+    //5request per minutes
+})
 
+app.use(cors(), express.json(), fileUpload())
 
 let database_
 
@@ -44,7 +50,7 @@ io.on('connection', (socket) => {
 
 //starting page
 app.get('/', (request, response) => {
-    response.sendFile(__dirname + '/index.html')
+    response.sendFile(__dirname + '/assets/15042069_1312460818785012_5299677553603536461_o.jpg').send('hej')
     //response.send('Hello from Pick & Pick up server')
 })
 
@@ -90,8 +96,8 @@ app.get('/offers', (request, response) => {
 })
 
 app.post('/offers', (request, response) => {
-    database_.run('INSERT INTO offers(name,description,offerPrice)values(?,?,?); SELECT last_insert_rowid();',
-        [request.body.offer.name, request.body.offer.description, request.body.offer.offerPrice])
+    database_.run('INSERT INTO offers(name,description,offerPrice,offerPicture)values(?,?,?,?); SELECT last_insert_rowid();',
+        [request.body.offer.name, request.body.offer.description, request.body.offer.offerPrice,request.body.offer.offerPicture])
         .then((rows) => {
             const products = request.body.products
             const lastId = rows.lastID

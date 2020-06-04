@@ -14,7 +14,6 @@
 </script>
 
 <style scoped>
-
     #nav {
         background: #EAFAFF;
         box-shadow: .15em .15em #d1d1d1;
