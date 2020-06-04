@@ -10,11 +10,12 @@ const io = require('socket.io')(server)
 
 app.use(cors(), express.json(), fileUpload())
 
+let connectedUsers = []
 
 let database_
 
 sqlite
-    .open({driver: sqlite3.Database, filename: './db/pickpickup.sqlite'})
+    .open({ driver: sqlite3.Database, filename: './db/pickpickup.sqlite' })
     .then(database => {
         database_ = database
     })
@@ -24,23 +25,22 @@ server.listen(3000, () => {
 })
 
 io.on('connection', (socket) => {
-    socket.on('user disconnected', () => {
-        console.log('user disconnected')
+
+    //data is an object that we receive from a client
+
+    socket.on('userOrder', (data) => {
+        var user = {}
+        //socket or socket.id?
+        user['user'] = socket
+        user['orderId'] = data.orderId
+        user['status'] = data.status
+        connectedUsers.push(user)
     })
 
-    socket.on('userObj', async (msg) => {
-        //userOBj = {orderedBy: "Jesper", offerId: 15}
 
-        await database_.all('SELECT * FROM orders WHERE orderId = ?', [msg.orderId])
-            .then(async (rows) => {
-                console.log(rows)
-                await socket.emit('msg', rows[0])
-            })
 
-        console.log(msg)
-    })
-    //socket.emit('msg',{server:'hej'})
 })
+
 
 //starting page
 app.get('/', (request, response) => {
@@ -53,19 +53,19 @@ app.get('/products', (request, response) => {
         .then((rows) => {
             response.status(200).send(rows)
         }).catch(() => {
-        response.status(401).send({message: -1}
-        )
-    })
+            response.status(401).send({ message: -1 }
+            )
+        })
 })
 
 app.post('/products', (request, response) => {
     database_.run('INSERT INTO products (name, price) VALUES (?,?)',
         [request.body.name, request.body.price])
         .then(() => {
-            response.send({message: 1})
+            response.send({ message: 1 })
         }).catch(() => {
-        response.send({message: -1})
-    })
+            response.send({ message: -1 })
+        })
 })
 
 app.get('/offerproducts', (request, response) => {
@@ -101,10 +101,10 @@ app.post('/offers', (request, response) => {
                         response.send(error)
                     })
             }
-            response.send({message: 1})
+            response.send({ message: 1 })
         }).catch(() => {
-        response.send({message: -1})
-    })
+            response.send({ message: -1 })
+        })
 })
 
 app.post('/upload', (request, response) => {
@@ -115,10 +115,10 @@ app.post('/upload', (request, response) => {
 
     image.mv(path, (error) => {
         console.error(error)
-        if(error){
-            return response.send({message: error})
+        if (error) {
+            return response.send({ message: error })
         }
-        response.send({message: 1})
+        response.send({ message: 1 })
     })
 })
 
@@ -169,25 +169,55 @@ app.put('/orders', (request, response) => {
         .catch(() => {
             response.send('NAY')
         })
+
+    socket.on('userObj', async () => {
+
+        var ordId = request.body.orderId
+        var status = request.body.status
+
+        //finding the correct object in the array
+        let obj = connectedUsers.find(obj => obj.order == ordId)
+      
+
+
+        switch (obj) {
+            case 1:
+                //sending message from a server to a customer
+                io.sockets.socket(socket.id).emit('userObj', { message: 'Your order has been declined' })
+                break;
+            case 2:
+                io.sockets.socket(socket.id).emit('userObj', { message: 'We are currently working on your order' })
+                break;
+            case 3:
+                //code for qr code?
+                io.sockets.socket(socket.id).emit('userObj', { message: 'Your order has been completed' })
+                break;
+            default:
+                '?'
+        }
+
+    })
+
 })
 
 app.put('/products', (request, response) => {
     database_.run('UPDATE products SET name = ?, price where productId = ?',
-    [request.body.name, request.body.price, request.body.productId])
+        [request.body.name, request.body.price, request.body.productId])
         .then(() => {
-       response.send ({message : 1})
-        })  .catch (() => {
-            response.send ({message : -1})
-        })     
+            response.send({ message: 1 })
+        }).catch(() => {
+            response.send({ message: -1 })
+        })
 })
 
 app.delete('/products', (request, response) => {
     database_.run('DELETE FROM products where productId = ?',
-    [request.body.productId])
-    .then(() => {
-        response.send ({message : 1})
-         })  .catch (() => {
-             response.send ({message : -1})
-         })        
-    })
- 
+        [request.body.productId])
+        .then(() => {
+            response.send({ message: 1 })
+        }).catch(() => {
+            response.send({ message: -1 })
+        })
+})
+
+
