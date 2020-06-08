@@ -75,17 +75,16 @@ app.post('/products', (request, response) => {
 })
 
 app.get('/offerproducts', (request, response) => {
-    database_.all('select products.name, oP.amount from products inner join offersProducts oP on products.productId = oP.productId where oP.offerId = ?;', [request.query.offerId])
+    database_.all('select products.name, products.price,oP.amount from products inner join offersProducts oP on products.productId = oP.productId where oP.offerId = ?;', [request.query.offerId])
         .then(rows => {
             response.send(rows)
         })
 })
 
-
 app.get('/offers', (request, response) => {
 
-    if(request.query.offerId){
-        database_.all('select * from offers where offers.offerId = ?;',[request.query.offerId])
+    if (request.query.offerId) {
+        database_.all('select * from offers where offers.offerId = ?;', [request.query.offerId])
             .then((rows) => {
                 response.send(rows)
             })
@@ -219,7 +218,8 @@ app.get('/login', (request, response) => {
             }
         }).catch(() => {
         response.status(401).send({message: -1})
-
+    })
+})
 
 app.put('/editoffer', (request, response) => {
     database_.run('UPDATE offers SET name = ?, description = ?,offerPrice = ? where offerId = ?',
@@ -229,7 +229,7 @@ app.put('/editoffer', (request, response) => {
             const offerId = rows.offerId
             for (let i = 0; i < products.length; ++i) {
                 database_.run('UPDATE offersProducts SET amount = ? where offerId = ? AND productId = ?',
-                    [products[i].amount, offerId,products[i].productId])
+                    [products[i].amount, offerId, products[i].productId])
                     .catch((error) => {
                         response.send(error)
                     })

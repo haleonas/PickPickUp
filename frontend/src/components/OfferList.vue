@@ -69,7 +69,7 @@
         },
         methods: {
             async getOffers() {
-                const response = await axios.get('http://localhost:3000/offers17')
+                const response = await axios.get('http://localhost:3000/offers')
                 for (let i = 0; i < response.data.length; i++) {
                     this.offers.push(response.data[i])
                 }
