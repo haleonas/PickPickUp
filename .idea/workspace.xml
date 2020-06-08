@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3a6b1278-343f-40ad-968d-9f492b74df68" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/backend/express_server/db/console.sql" beforeDir="false" afterPath="$PROJECT_DIR$/backend/express_server/db/console.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/express_server/db/pickpickup.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/backend/express_server/db/pickpickup.sqlite" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/express_server/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/express_server/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/express_server/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/express_server/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/express_server/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/express_server/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/OfferList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/OfferList.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/router/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/views/Offers.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/Offers.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

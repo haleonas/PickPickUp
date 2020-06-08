@@ -4,22 +4,28 @@
 
   <div id="edit-offer">
   <app-header title-text="Edit Offer"></app-header>
-            <form id="edit-offer-form">
+              <form class="edit-offer-form">
+              <b-input v-model="offerId" type="number"/>
+              <button @click="setOfferID">Send</button>
+              </form>
+
+<form class="edit-offer-form" v-if="offer.offerId">
                 <p>
                     <b-field label="Name of Offer: ">
-                        <b-input v-model="name"/>
+                        <b-input v-model="offer.name"/>
                     </b-field>
 
                 </p>
 
                 <p>
                     <b-field label="Offer Description">
-                        <b-input type="textarea" v-model="description">
+                        <b-input type="textarea" v-model="offer.description">
                         </b-input>
                     </b-field>
                     <br>
                 </p>
-                <div>
+
+                 <div>
                     Products
 
                     <b-pagination
@@ -36,7 +42,7 @@
                             :icon-next="nextIcon">
                     </b-pagination>
 
-                    <div v-for="(offerProduct,index) in paginatedItems" :key="offerProduct.name">
+                    <div v-for="(offerProduct,index) in paginatedItems" :key="offerProduct.productId">
                         Product name: {{offerProduct.name}}
                         <br>
                         Price: {{offerProduct.price}}
@@ -63,15 +69,24 @@
 
 
                 </div>
-                Total cost of products: {{totalsum}}
+
+                                Total cost of products: {{totalsum}}
                 <br>
                 <b-field label="Price for the offer:">
-                    <b-input type="number" min="0" v-model="offerPrice"/>
+                    <b-input type="number" min="0" v-model="offer.offerPrice"/>
                 </b-field>
                 <br>
-                <button @click.prevent="addOffer" id="edit-offer-btn">Send</button>
+                <button @click.prevent="editOffer" id="edit-offer-btn">Send</button>
                 <div v-if="sendError">Fields incorrectly filled</div>
-            </form>
+
+</form>
+
+
+            <!-- <form class="edit-offer-form">
+
+               
+
+            </form> -->
     </div>
 </template>
 
@@ -88,12 +103,10 @@ applicants:[
        {
       msg: ''       }
      ],
-                offerId: 15,
-                offers: [],
+                offerId: 0,
+                offer: {},
                 offerProducts: [],
-
                 products: [],
-
                 name: [],
                 description: [],
                 amounts: {},
@@ -125,28 +138,49 @@ applicants:[
             }
         },
         beforeMount() { 
-            this.getOfferproducts()
             this.setTitle()
-            this.getOffers()
-            this.setofferID()
-
         },
         methods: {
+calcTotal() {
+                this.totalsum  = 0
+                for (let i = 0; i < this.offerProducts.length; ++i) {
+                    this.totalsum += (this.amounts[`price${i}`] * this.offerProducts[i]['price'])
+                }
+            },
 
-            async getOffers() {
-                const response = await axios.get('http://localhost:3000/offers?offerId='+this.offerId)
-                    this.offers.push(response.data[0])
-                    this.name.push(response.data[0].name)
-                    this.description.push(response.data[0].description)
-                    this.offerPrice.push(response.data[0].offerPrice)
+        setTitle(){
+        document.title='Edit Offer';
+        },
+
+            setOfferID() {
+
+                this.getOffer()
+                this.getOfferproducts()
+
+            },
+            async getOffer() {
+                const response = await axios.get('http://localhost:3000/offers',{
+                    params:{offerId: this.offerId}
+                })
+
+                this.offer=response.data[0]
+                
+                console.log(this.offer)
                     },
 
             async getOfferproducts() {
-                const response = await axios.get('http://localhost:3000/offerproducts?offerId='+this.offerId)
+                this.offerProducts=[]
+                const response = await axios.get('http://localhost:3000/offerproducts',{
+                    params:{offerId: this.offerId}
+                })
+
+
                     for (let i = 0; i < response.data.length; ++i) {
                     this.offerProducts.push(response.data[i])
                     this.amounts[`price${i}`] = response.data[i].amount
                 }
+                this.totalsum =0
+
                 for (let i = 0; i < this.offerProducts.length; ++i) {
                         this.totalsum += (this.amounts[`price${i}`] * this.offerProducts[i]['price'])
                 }
@@ -154,34 +188,39 @@ applicants:[
             },
 
             async editOffer() {
-                if (this.name && this.description) {
+                if (this.offer.name && this.offer.description) {
+                    console.log('hi')
                     let offer = {}
-                    offer['name'] = this.name
-                    offer['description'] = this.description
+                    offer['name'] = this.offer.name
+                    offer['description'] = this.offer.description
                     if (this.offerPrice >= 1) {
-                        offer['offerPrice'] = this.offerPrice
+                        offer['offerPrice'] = this.offer.offerPrice
                     } else {
-                        offer['offerPrice'] = this.total
+                        offer['offerPrice'] = this.totalsum
                     }
 
                     let products = []
 
-                    for (let i = 0; i < this.products.length; ++i) {
+                    for (let i = 0; i < this.offerProducts.length; ++i) {
                         if (this.amounts[`price${i}`] !== 0) {
                             products.push({
-                                productId: this.products[i]['productId'],
+                                productId: this.offerProducts[i]['productId'],
                                 amount: this.amounts[`price${i}`]
                             })
                         }
                     }
+                                            console.log(this.offerProducts.length)
+
                     if (products.length > 0) {
-                        const response = await axios.post('http://localhost:3000/editoffer?offerId='+this.offerId, {
+                        console.log('hi2')
+                        const response = await axios.put('http://localhost:3000/editoffer', {
+                            offerId: this.offer.offerId,
                             offer,
                             products
                         })
 
                         if (response.data.message === 1) {
-                            await this.$router.push({path: '/editoffer'})
+                            await this.$router.push({path: '/offers'})
                         } else {
                             alert('Something went wrong')
                         }
@@ -191,25 +230,8 @@ applicants:[
                 } else {
                     this.sendError = true
                 }
-            },
-setofferID() {
-      this.applicants.push({
-        msg:''      })
-        this.offerId = this.applicants.offerId
-        },
-            setTitle() {
-                document.title = 'Edit offer'
-            },
+            }}}
 
-            
-            calcTotal() {
-                this.total = 0
-                for (let i = 0; i < this.offerProducts.length; ++i) {
-                        this.totalsum += (this.amounts[`price${i}`] * this.offerProducts[i]['price'])
-                }
-            }
-        }
-    }
 </script>
 
 <style scoped>
@@ -220,7 +242,7 @@ setofferID() {
         justify-content: center;
     }
 
-    #edit-offer-form {
+    .edit-offer-form {
         width: 25%;
         background: #EAFAFF;
         box-shadow: .15em .15em #d1d1d1;

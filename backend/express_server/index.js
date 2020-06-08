@@ -157,13 +157,14 @@ app.put('/orders', (request, response) => {
 
 
 app.put('/editoffer', (request, response) => {
-    database_.run('UPDATE offers SET (name,description,offerPrice) values (?,?,?) where offerId = ?',
-        [request.body.offer.name, request.body.offer.description, request.body.offer.offerPrice, request.query.offerId])
+    database_.run('UPDATE offers SET name = ?, description = ?,offerPrice = ? where offerId = ?',
+        [request.body.offer.name, request.body.offer.description, request.body.offer.offerPrice, request.body.offerId])
         .then((rows) => {
             const products = request.body.products
             const offerId = rows.offerId
             for (let i = 0; i < products.length; ++i) {
-                database_.run('UPDATE offersProducts SET (productId,amount) VALUES(?,?,?) where offerId = ?', [products[i].productId, products[i].amount, offerId])
+                database_.run('UPDATE offersProducts SET amount = ? where offerId = ? AND productId = ?',
+                    [products[i].amount, offerId,products[i].productId])
                     .catch((error) => {
                         response.send(error)
                     })
