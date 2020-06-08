@@ -50,7 +50,7 @@ io.on('connection', (socket) => {
 
 //starting page
 app.get('/', (request, response) => {
-    response.sendFile(__dirname + '/assets/15042069_1312460818785012_5299677553603536461_o.jpg').send('hej')
+    response.send('hej')
     //response.send('Hello from Pick & Pick up server')
 })
 
@@ -97,7 +97,7 @@ app.get('/offers', (request, response) => {
 
 app.post('/offers', (request, response) => {
     database_.run('INSERT INTO offers(name,description,offerPrice,offerPicture)values(?,?,?,?); SELECT last_insert_rowid();',
-        [request.body.offer.name, request.body.offer.description, request.body.offer.offerPrice,request.body.offer.offerPicture])
+        [request.body.offer.name, request.body.offer.description, request.body.offer.offerPrice, request.body.offer.offerPicture])
         .then((rows) => {
             const products = request.body.products
             const lastId = rows.lastID
@@ -121,7 +121,7 @@ app.post('/upload', (request, response) => {
 
     image.mv(path, (error) => {
         console.error(error)
-        if(error){
+        if (error) {
             return response.send({message: error})
         }
         response.send({message: 1})
@@ -179,21 +179,43 @@ app.put('/orders', (request, response) => {
 
 app.put('/products', (request, response) => {
     database_.run('UPDATE products SET name = ?, price = ? where productId = ?',
-    [request.body.name, request.body.price, request.body.productId])
+        [request.body.name, request.body.price, request.body.productId])
         .then(() => {
-       response.send ({message : 1})
-        })  .catch (() => {
-            response.send ({message : -1})
-        })     
+            response.send({message: 1})
+        }).catch(() => {
+        response.send({message: -1})
+    })
 })
 
 app.delete('/products', (request, response) => {
     database_.run('DELETE FROM products where productId = ?',
-    [request.body.productId])
-    .then(() => {
-        response.send ({message : 1})
-         })  .catch (() => {
-             response.send ({message : -1})
-         })        
+        [request.body.productId])
+        .then(() => {
+            response.send({message: 1})
+        }).catch(() => {
+        response.send({message: -1})
     })
- 
+})
+
+app.post('/register', (request, response) => {
+    database_.run('insert into user(username,password) values(?,?)',
+        [request.body.username, request.body.password])
+        .then(() => {
+            response.send({message: 1})
+        }).catch(() => {
+        response.send({message: -1})
+    })
+})
+
+app.get('/login', (request, response) => {
+    database_.all('select * from user where username=? AND password=?', [request.body.username, request.body.password])
+        .then((rows) => {
+            if (rows.length === 1) {
+                response.status(201).send({message: 1})
+            } else {
+                response.status(401).send({message: -1})
+            }
+        }).catch(() => {
+        response.status(401).send({message: -1})
+    })
+})
