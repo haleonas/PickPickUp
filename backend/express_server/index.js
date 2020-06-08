@@ -55,7 +55,7 @@ app.get('/', (request, response) => {
 })
 
 app.get('/products', (request, response) => {
-    database_.all('SELECT *from products')
+    database_.all('SELECT * from products')
         .then((rows) => {
             response.status(200).send(rows)
         }).catch(() => {
@@ -81,9 +81,11 @@ app.get('/offerproducts', (request, response) => {
         })
 })
 
+
 app.get('/offers', (request, response) => {
-    if (request.query.offerId) {
-        database_.all('select offers.name, offers.offerPrice from offers where offers.offerId = ?;', [request.query.offerId])
+
+    if(request.query.offerId){
+        database_.all('select * from offers where offers.offerId = ?;',[request.query.offerId])
             .then((rows) => {
                 response.send(rows)
             })
@@ -217,5 +219,23 @@ app.get('/login', (request, response) => {
             }
         }).catch(() => {
         response.status(401).send({message: -1})
+
+
+app.put('/editoffer', (request, response) => {
+    database_.run('UPDATE offers SET name = ?, description = ?,offerPrice = ? where offerId = ?',
+        [request.body.offer.name, request.body.offer.description, request.body.offer.offerPrice, request.body.offerId])
+        .then((rows) => {
+            const products = request.body.products
+            const offerId = rows.offerId
+            for (let i = 0; i < products.length; ++i) {
+                database_.run('UPDATE offersProducts SET amount = ? where offerId = ? AND productId = ?',
+                    [products[i].amount, offerId,products[i].productId])
+                    .catch((error) => {
+                        response.send(error)
+                    })
+            }
+            response.send({message: 1})
+        }).catch(() => {
+        response.send({message: -1})
     })
 })

@@ -5,6 +5,7 @@ import Offers from '../views/Offers.vue'
 import Products from '../views/Products.vue'
 import CreateProduct from '../views/CreateProduct.vue'
 import AddOffer from "../views/AddOffer"
+import EditOffer from "../views/EditOffer"
 import Orders from "../views/Orders";
 import EditProduct from "../views/EditProduct";
 
@@ -35,6 +36,11 @@ const routes = [
     path: '/addoffer',
     name: 'AddOffer',
     component: AddOffer
+  },
+  {
+    path: '/editoffer',
+    name: 'EditOffer',
+    component: EditOffer
   },
   {
     path: '/orders',
