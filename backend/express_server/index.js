@@ -17,10 +17,14 @@ const limiter = rateLimit({
 
 app.use(cors(), express.json(), fileUpload())
 
+let connectedUsers = []
+
+
+
 let database_
 
 sqlite
-    .open({driver: sqlite3.Database, filename: './db/pickpickup.sqlite'})
+    .open({ driver: sqlite3.Database, filename: './db/pickpickup.sqlite' })
     .then(database => {
         database_ = database
     })
@@ -29,24 +33,12 @@ server.listen(3000, () => {
     console.log('Server is listening')
 })
 
-io.on('connection', (socket) => {
-    socket.on('user disconnected', () => {
-        console.log('user disconnected')
-    })
 
-    socket.on('userObj', async (msg) => {
-        //userOBj = {orderedBy: "Jesper", offerId: 15}
-
-        await database_.all('SELECT * FROM orders WHERE orderId = ?', [msg.orderId])
-            .then(async (rows) => {
-                console.log(rows)
-                await socket.emit('msg', rows[0])
-            })
-
-        console.log(msg)
-    })
-    //socket.emit('msg',{server:'hej'})
+//implementing socket
+io.on('connection', (socket)=>{
+    console.log('Test')
 })
+
 
 app.get('/', (request, response) => {
     response.send('Hello from Pick & Pick up server')

@@ -1,80 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+
 <body>
-<!doctype html>
-<html>
-<head>
-    <title>Socket.IO chat</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    <!doctype html>
+    <html>
 
-        body {
-            font: 13px Helvetica, Arial;
-        }
+    <head>
+        <title>Socket.IO chat</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
 
-        form {
-            background: #000;
-            padding: 3px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
+            body {
+                font: 13px Helvetica, Arial;
+            }
 
-        form input {
-            border: 0;
-            padding: 10px;
-            width: 90%;
-            margin-right: 0.5%;
-        }
+            form {
+                background: #000;
+                padding: 3px;
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+            }
 
-        form button {
-            width: 9%;
-            background: rgb(130, 224, 255);
-            border: none;
-            padding: 10px;
-        }
+            form input {
+                border: 0;
+                padding: 10px;
+                width: 90%;
+                margin-right: 0.5%;
+            }
 
-        #messages {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
+            form button {
+                width: 9%;
+                background: rgb(130, 224, 255);
+                border: none;
+                padding: 10px;
+            }
 
-        #messages li {
-            padding: 5px 10px;
-        }
+            #messages {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+            }
 
-        #messages li:nth-child(odd) {
-            background: #eee;
-        }
-    </style>
-</head>
-<body>
-<ul id="messages"></ul>
-<form action="">
-    <input id="m" autocomplete="off"/>
-    <button>Send</button>
-</form>
+            #messages li {
+                padding: 5px 10px;
+            }
 
-<script src="/socket.io/socket.io.js"></script>
-<script>
-    var socket = io();
-    socket.emit('userObj', {user: 'Jesper', orderId: 3})
+            #messages li:nth-child(odd) {
+                background: #eee;
+            }
+        </style>
+    </head>
 
-    socket.on('msg', (msg) => {
-        console.log(msg)
-    })
+    <body>
+        <ul id="messages"></ul>
+        <form action="">
+            <input id="m" autocomplete="off" />
+            <button>Send</button>
+        </form>
 
-</script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+
+
+            var socket = io.connect('http://localhost:3000');
+
+            socket.on('msg', (data) => {
+                console.log("Received: " + data)
+            });
+
+
+        </script>
+    </body>
+
+    </html>
 </body>
-</html>
-</body>
+
 </html>
