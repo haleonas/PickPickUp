@@ -13,7 +13,10 @@ const io = require('socket.io')(server)
 
 app.use(cors(), express.json(), fileUpload())
 
-let connectedUsers = []
+let connectedUsers = [{
+    user: 'Mon',
+    orderId: 8
+}]
 
 let database_
 
@@ -28,8 +31,7 @@ server.listen(3000, () => {
 })
 
 io.on('connection', (socket) => {
-    console.log('test')
-    //data is an object that we receive from a client
+    // socket.emit('msg','Test') 
 
     socket.on('userOrder', (data) => {
         var user = {}
@@ -147,7 +149,7 @@ app.post('/orders', async (request, response) => {
     let qrCode = `${request.body.orderedBy}`
     await database_.all('SELECT name FROM offers where offerId = ?', [request.body.offerId])
         .then(async (rows) => {
-            qrCode += ' ' + await rows[0].name
+            // qrCode += ' ' + await rows[0].name
         })
 
     await database_.run('INSERT INTO orders(orderedBy,status,qrCode,amount,offerid,orderTime) VALUES(?,?,?,?,?,?);', [request.body.orderedBy, 'awaiting response', qrCode, request.body.amount, request.body.offerId, request.body.timeStamp])
@@ -161,6 +163,8 @@ app.post('/orders', async (request, response) => {
         .then((rows) => {
             response.send(rows)
         })
+
+
 })
 
 app.put('/orders', (request, response) => {
@@ -168,11 +172,12 @@ app.put('/orders', (request, response) => {
     database_.run('UPDATE orders SET status = ? where orderId = ?', [request.body.status, request.body.orderId])
         .then(() => {
             response.send('YAY')
+            console.log('Your order status has been changed')
+
         })
         .catch(() => {
             response.send('NAY')
         })
-
 })
 
 app.put('/products', (request, response) => {

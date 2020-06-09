@@ -62,6 +62,9 @@
     </head>
 
     <body>
+         <h1></h1>
+
+
         <ul id="messages"></ul>
         <form action="">
             <input id="m" autocomplete="off" />
@@ -70,9 +73,17 @@
 
         <script src="/socket.io/socket.io.js"></script>
         <script>
-            var socket = io();
-
             
+            var socket = io.connect('http://localhost:3000');
+
+           
+
+
+            socket.on('msg', (data) => {
+                console.log("Received: " + data)
+            });
+
+
 
         </script>
     </body>
