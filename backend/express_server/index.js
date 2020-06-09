@@ -13,10 +13,7 @@ const io = require('socket.io')(server)
 
 app.use(cors(), express.json(), fileUpload())
 
-let connectedUsers = [{
-    user: 'Mon',
-    orderId: 8
-}]
+let connectedUsers = []
 
 let database_
 
@@ -31,7 +28,8 @@ server.listen(3000, () => {
 })
 
 io.on('connection', (socket) => {
-    // socket.emit('msg','Test') 
+    socket.emit('msg','Test') 
+    console.log('Test')
 
     socket.on('userOrder', (data) => {
         var user = {}
@@ -41,8 +39,6 @@ io.on('connection', (socket) => {
         user['status'] = data.status
         connectedUsers.push(user)
     })
-
-
 
 })
 
@@ -171,13 +167,21 @@ app.put('/orders', (request, response) => {
     //orderId & status
     database_.run('UPDATE orders SET status = ? where orderId = ?', [request.body.status, request.body.orderId])
         .then(() => {
-            response.send('YAY')
-            console.log('Your order status has been changed')
+          
+            for( user in connectedUsers){
+                console.log('test')
+                if(user.orderId === request.body.orderId){
+                    io.socket(user).emit('msg', request.body.status)
+                    console.log('test')
+                }
 
+            }
+            response.send('YAY')
         })
         .catch(() => {
             response.send('NAY')
         })
+
 })
 
 app.put('/products', (request, response) => {
