@@ -201,23 +201,24 @@ app.delete('/products', (request, response) => {
 app.post('/register', (request, response) => {
     database_.run('insert into user(username,password) values(?,?)',
         [request.body.username, request.body.password])
-        .then(() => {
-            response.send({message: 1})
+        .then((rows) => {
+
+            response.send({userId: rows.lastId})
         }).catch(() => {
         response.send({message: -1})
     })
 })
 
 app.get('/login', (request, response) => {
-    database_.all('select * from user where username=? AND password=?', [request.body.username, request.body.password])
+    database_.all('select userId from user where username=? AND password=?', [request.body.username, request.body.password])
         .then((rows) => {
             if (rows.length === 1) {
-                response.status(201).send({message: 1})
+                response.status(201).send({userid: rows[0].userId})
             } else {
-                response.status(401).send({message: -1})
+                response.status(401).send({error: -1})
             }
         }).catch(() => {
-        response.status(401).send({message: -1})
+        response.status(401).send({error: -1})
     })
 })
 
