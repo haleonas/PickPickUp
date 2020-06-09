@@ -209,7 +209,7 @@ app.post('/register', (request, response) => {
     })
 })
 
-app.get('/login', (request, response) => {
+app.post('/login', (request, response) => {
     database_.all('select userId from user where username=? AND password=?', [request.body.username, request.body.password])
         .then((rows) => {
             if (rows.length === 1) {
