@@ -63,6 +63,7 @@ app.get('/products', (request, response) => {
             return response.status(401).send({message: error}
             )
         })
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.post('/products', (request, response) => {
@@ -76,6 +77,7 @@ app.post('/products', (request, response) => {
             console.log()
             return response.status(401).send({status: -1, message: 'Product couldn/t be added'})
         })
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.get('/offerproducts', (request, response) => {
@@ -88,7 +90,7 @@ app.get('/offerproducts', (request, response) => {
             console.log('Couldn\'t retrieve offerproducts')
             return response.status(401).send({status: -1, message: error})
         })
-
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.get('/offers', (request, response) => {
@@ -101,7 +103,7 @@ app.get('/offers', (request, response) => {
             .catch((error) => {
                 return response.status(401).send({status: -1, message: error})
             })
-
+        response.status(500).send({status: -1, message: 'Server error'})
     } else {
         database_.all('select offers.offerId, offers.name,offers.description, offers.offerPrice, group_concat(p.name) as products from offers inner join offersProducts oP on offers.offerId = oP.offerId inner join products p on oP.productId = p.productId group by offers.offerId;')
             .then((rows) => {
@@ -113,7 +115,7 @@ app.get('/offers', (request, response) => {
                 return response.status(401).send({status: -1, message: error})
             })
     }
-
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.post('/offers', (request, response) => {
@@ -133,7 +135,7 @@ app.post('/offers', (request, response) => {
         }).catch((error) => {
         response.status(401).send({status: -1, message: error})
     })
-
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.post('/upload', (request, response) => {
@@ -149,6 +151,7 @@ app.post('/upload', (request, response) => {
         }
         return response.send({status: 1, message: 'Image added'})
     })
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.get('/orders', (request, response) => {
@@ -175,7 +178,7 @@ app.get('/orders', (request, response) => {
                 return response.status(401).send({status: -1, message: error})
             })
     }
-
+    response.status(500).send({status: -1, message: 'Server error'})
 
 })
 
@@ -199,7 +202,7 @@ app.post('/orders', async (request, response) => {
             return response.status(201).send({status: -1, message: error})
         })
 
-
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.put('/orders', (request, response) => {
@@ -225,7 +228,7 @@ app.put('/orders', (request, response) => {
                 return response.status(401).send({status: 1, message: error})
             })
     }
-
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.put('/products', (request, response) => {
@@ -239,7 +242,7 @@ app.put('/products', (request, response) => {
             console.log('Product not updated')
             return response.status(401).send({status: 1, message: error})
         })
-
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.delete('/products', (request, response) => {
@@ -253,7 +256,7 @@ app.delete('/products', (request, response) => {
             console.log('Product not deleted')
             return response.send({status: -1, message: 'Product not deleted'})
         })
-
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.post('/register', (request, response) => {
@@ -267,7 +270,7 @@ app.post('/register', (request, response) => {
             console.log('User not registered')
             return response.send({message: error})
         })
-
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.post('/login', (request, response) => {
@@ -284,7 +287,7 @@ app.post('/login', (request, response) => {
         console.log('User not logged in')
         return response.status(401).send({status: -1, message: error})
     })
-
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.put('/editoffer', (request, response) => {
@@ -305,5 +308,5 @@ app.put('/editoffer', (request, response) => {
         }).catch((error) => {
         return response.send({status: -1, message: error})
     })
-
+    response.status(500).send({status: -1, message: 'Server error'})
 })
