@@ -39,7 +39,7 @@ create table orders
 (
     orderId   INTEGER PRIMARY KEY,
     status    TEXT,
-    orderedBy TEXT,
+    userId    INTEGER,
     qrCode    TEXT,
     amount    INTEGER,
     orderTime NUMERIC,

@@ -217,7 +217,7 @@
                             products
                         })
 
-                        if (response.data.message === 1) {
+                        if (response.data.status === 1) {
                             await this.$router.push({path: '/offers'})
                         } else {
                             alert('Something went wrong')

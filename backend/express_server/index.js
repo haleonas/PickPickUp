@@ -48,70 +48,94 @@ io.on('connection', (socket) => {
     //socket.emit('msg',{server:'hej'})
 })
 
-//starting page
 app.get('/', (request, response) => {
-    response.send('hej')
-    //response.send('Hello from Pick & Pick up server')
+    response.send('Hello from Pick & Pick up server')
 })
 
 app.get('/products', (request, response) => {
     database_.all('SELECT * from products')
         .then((rows) => {
-            response.status(200).send(rows)
-        }).catch(() => {
-        response.status(401).send({message: -1}
-        )
-    })
+            console.log('Sending all products')
+            return response.status(201).send(rows)
+        })
+        .catch((error) => {
+            console.log('Something went wrong while retrieving products')
+            return response.status(401).send({message: error}
+            )
+        })
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.post('/products', (request, response) => {
     database_.run('INSERT INTO products (name, price) VALUES (?,?)',
         [request.body.name, request.body.price])
         .then(() => {
-            response.send({message: 1})
-        }).catch(() => {
-        response.send({message: -1})
-    })
+            console.log('Product added')
+            return response.status(201).send({status: 1, message: 'Product added'})
+        })
+        .catch(() => {
+            console.log()
+            return response.status(401).send({status: -1, message: 'Product couldn/t be added'})
+        })
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.get('/offerproducts', (request, response) => {
     database_.all('select products.name, products.price,oP.amount from products inner join offersProducts oP on products.productId = oP.productId where oP.offerId = ?;', [request.query.offerId])
         .then(rows => {
-            response.send(rows)
+            console.log('Sending all offer products')
+            return response.status(201).send(rows)
         })
+        .catch((error) => {
+            console.log('Couldn\'t retrieve offerproducts')
+            return response.status(401).send({status: -1, message: error})
+        })
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.get('/offers', (request, response) => {
-
     if (request.query.offerId) {
         database_.all('select * from offers where offers.offerId = ?;', [request.query.offerId])
             .then((rows) => {
-                response.send(rows)
+                console.log('sending all offer')
+                return response.status(201).send(rows)
             })
+            .catch((error) => {
+                return response.status(401).send({status: -1, message: error})
+            })
+        response.status(500).send({status: -1, message: 'Server error'})
     } else {
         database_.all('select offers.offerId, offers.name,offers.description, offers.offerPrice, group_concat(p.name) as products from offers inner join offersProducts oP on offers.offerId = oP.offerId inner join products p on oP.productId = p.productId group by offers.offerId;')
             .then((rows) => {
-                response.send(rows)
+                console.log('Sending all offers')
+                return response.status(201).send(rows)
+            })
+            .catch((error) => {
+                console.log('Couldn\'t send all offers')
+                return response.status(401).send({status: -1, message: error})
             })
     }
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.post('/offers', (request, response) => {
     database_.run('INSERT INTO offers(name,description,offerPrice,offerPicture)values(?,?,?,?); SELECT last_insert_rowid();',
         [request.body.offer.name, request.body.offer.description, request.body.offer.offerPrice, request.body.offer.offerPicture])
         .then((rows) => {
+            console.log('Offer added')
             const products = request.body.products
             const lastId = rows.lastID
             for (let i = 0; i < products.length; ++i) {
                 database_.run('INSERT INTO offersProducts(offerId,productId,amount) VALUES(?,?,?)', [lastId, products[i].productId, products[i].amount])
                     .catch((error) => {
-                        response.send(error)
+                        return response.status(401).send()
                     })
             }
-            response.send({message: 1})
-        }).catch(() => {
-        response.send({message: -1})
+            return response.send({message: 1})
+        }).catch((error) => {
+        response.status(401).send({status: -1, message: error})
     })
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.post('/upload', (request, response) => {
@@ -123,103 +147,147 @@ app.post('/upload', (request, response) => {
     image.mv(path, (error) => {
         console.error(error)
         if (error) {
-            return response.send({message: error})
+            return response.status(401).send({status: -1, message: error})
         }
-        response.send({message: 1})
+        return response.send({status: 1, message: 'Image added'})
     })
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.get('/orders', (request, response) => {
-    database_.all('SELECT * FROM orders order by case when status = \'in progress\' then 1 when status = \'declined\' then 2 when status = \'completed\' then 3 end;')
-        .then((rows) => {
-            response.send(rows)
-        })
-        .catch(() => {
-            response.send('Something went wrong')
-        })
+
+    //if request.body has a user id send the users order instead of all
+    if (request.body.userId) {
+        database_.all('SELECT * FROM orders where userId = ?', [request.body.userId])
+            .then((rows) => {
+                console.log('Sending order')
+                return response.status(201).send(rows)
+            })
+            .catch((error) => {
+                console.log('Error getting order: ' + error)
+                return response.status(401).send({status: -1, message: error})
+            })
+    } else {
+        database_.all('SELECT * FROM orders order by case when status = \'in progress\' then 1 when status = \'declined\' then 2 when status = \'completed\' then 3 end;')
+            .then((rows) => {
+                console.log('Sending all orders')
+                return response.status(201).send(rows)
+            })
+            .catch(() => {
+                console.log('Couldn\'t get order')
+                return response.status(401).send({status: -1, message: error})
+            })
+    }
+    response.status(500).send({status: -1, message: 'Server error'})
+
 })
 
-/*
-timestamp
-sätt i databasen
-
-frontend
-skriva ut olika tids gränser  beroende på vilken tid det är kvar
-*/
-
 app.post('/orders', async (request, response) => {
-    let qrCode = `${request.body.orderedBy}`
-    await database_.all('SELECT name FROM offers where offerId = ?', [request.body.offerId])
-        .then(async (rows) => {
-            qrCode += ' ' + await rows[0].name
-        })
-
-    await database_.run('INSERT INTO orders(orderedBy,status,qrCode,amount,offerid,orderTime) VALUES(?,?,?,?,?,?);', [request.body.orderedBy, 'awaiting response', qrCode, request.body.amount, request.body.offerId, request.body.timeStamp])
+    await database_.run('INSERT INTO orders(userId,status,qrCode,amount,offerid,orderTime) VALUES(?,?,?,?,?,?);', [request.body.orderedBy, 'awaiting response', 'temp', request.body.amount, request.body.offerId, request.body.timeStamp])
         .then(() => {
-            console.log('yay')
+            console.log('Order added')
+            return response.status(201).send({status: 1, message: 'Order added'})
         })
         .catch((error) => {
-            response.send(error)
+            console.log('Order couldn\'t be added')
+            return response.status(201).send({status: -1, message: error})
         })
+
     await database_.all('SELECT * FROM orders WHERE orderId = (SELECT MAX(orderId) from orders)')
         .then((rows) => {
-            response.send(rows)
+            console.log('Order Sent')
+            return response.status(201).send(rows)
+        }).catch((error) => {
+            console.log('Order couldn\'t be added')
+            return response.status(201).send({status: -1, message: error})
         })
+
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.put('/orders', (request, response) => {
     //orderId & status
-    database_.run('UPDATE orders SET status = ? where orderId = ?', [request.body.status, request.body.orderId])
-        .then(() => {
-            response.send('YAY')
-        })
-        .catch(() => {
-            response.send('NAY')
-        })
+    if (request.body.userId) {
+        database_.run('UPDATE orders SET status = ? where orderId = ?', [request.body.status, request.body.userId])
+            .then(() => {
+                console.log('Order Updated')
+                return response.status(201).send({status: 1, message: 'Order Updated'})
+            })
+            .catch(() => {
+                console.log('Order Updated')
+                return response.status(201).send({status: 1, message: 'Order Updated'})
+            })
+    } else {
+        database_.run('UPDATE orders SET status = ? where orderId = ?', [request.body.status, request.body.orderId])
+            .then(() => {
+                console.log('Order Updated')
+                return response.status(201).send({status: 1, message: 'Order updated'})
+            })
+            .catch((error) => {
+                console.log('Order not Updated')
+                return response.status(401).send({status: 1, message: error})
+            })
+    }
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.put('/products', (request, response) => {
     database_.run('UPDATE products SET name = ?, price = ? where productId = ?',
         [request.body.name, request.body.price, request.body.productId])
         .then(() => {
-            response.send({message: 1})
-        }).catch(() => {
-        response.send({message: -1})
-    })
+            console.log('Product updated')
+            response.status(201).send({status: 1, message: 'Product updated'})
+        })
+        .catch((error) => {
+            console.log('Product not updated')
+            return response.status(401).send({status: 1, message: error})
+        })
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.delete('/products', (request, response) => {
     database_.run('DELETE FROM products where productId = ?',
         [request.body.productId])
         .then(() => {
-            response.send({message: 1})
-        }).catch(() => {
-        response.send({message: -1})
-    })
+            console.log('Product deleted')
+            return response.status(201).send({status: 1, message: 'Product deleted'})
+        })
+        .catch(() => {
+            console.log('Product not deleted')
+            return response.send({status: -1, message: 'Product not deleted'})
+        })
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.post('/register', (request, response) => {
     database_.run('insert into user(username,password) values(?,?)',
         [request.body.username, request.body.password])
         .then((rows) => {
-
-            response.send({userId: rows.lastId})
-        }).catch(() => {
-        response.send({message: -1})
-    })
+            console.log('User registered')
+            return response.status(201).send({userId: rows.lastId})
+        })
+        .catch((error) => {
+            console.log('User not registered')
+            return response.send({message: error})
+        })
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.post('/login', (request, response) => {
     database_.all('select userId from user where username=? AND password=?', [request.body.username, request.body.password])
         .then((rows) => {
             if (rows.length === 1) {
-                response.status(201).send({userid: rows[0].userId})
+                console.log('User logged in')
+                return response.status(201).send({userid: rows[0].userId})
             } else {
-                response.status(401).send({error: -1})
+                console.log('User not logged in')
+                return response.status(401).send({status: -1, message: 'User not logged in'})
             }
-        }).catch(() => {
-        response.status(401).send({error: -1})
+        }).catch((error) => {
+        console.log('User not logged in')
+        return response.status(401).send({status: -1, message: error})
     })
+    response.status(500).send({status: -1, message: 'Server error'})
 })
 
 app.put('/editoffer', (request, response) => {
@@ -232,11 +300,13 @@ app.put('/editoffer', (request, response) => {
                 database_.run('UPDATE offersProducts SET amount = ? where offerId = ? AND productId = ?',
                     [products[i].amount, offerId, products[i].productId])
                     .catch((error) => {
-                        response.send(error)
+                        console.log('Couldn\'t update the offerproduct')
+                        return response.status(401).send({status: 1, message: error})
                     })
             }
-            response.send({message: 1})
-        }).catch(() => {
-        response.send({message: -1})
+            return response.status(201).send({status: 1, message: 'Offer updated'})
+        }).catch((error) => {
+        return response.send({status: -1, message: error})
     })
+    response.status(500).send({status: -1, message: 'Server error'})
 })

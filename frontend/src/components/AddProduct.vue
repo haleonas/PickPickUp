@@ -42,7 +42,7 @@
                             JSON.stringify({name: this.name, price: this.price})
                     })
                     const data = await response.json()
-                    if (data.message === 1) {
+                    if (data.status === 1) {
                         await this.$router.push({path: '/products'})
                     } else {
                         alert('Something went wrong!')
