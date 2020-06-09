@@ -35,10 +35,24 @@ server.listen(3000, () => {
 
 
 //implementing socket
-io.on('connection', (socket)=>{
+io.on('connection', (socket) => {
+    socket.emit('msg','Test') 
     console.log('Test')
+
+    socket.on('userOrder', (data) => {
+        var user = {}
+        user = socket.id
+        user['user'] = socket.id
+        user['orderId'] = data.orderId
+        user['status'] = data.status
+        connectedUsers.push(user)
+    })
+
 })
 
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+  });
 
 app.get('/', (request, response) => {
     response.send('Hello from Pick & Pick up server')
@@ -203,8 +217,21 @@ app.put('/orders', (request, response) => {
     if (request.body.userId) {
         database_.run('UPDATE orders SET status = ? where orderId = ?', [request.body.status, request.body.userId])
             .then(() => {
+
+                 //socket
+                 for( user in connectedUsers){
+                    console.log('test')
+                    if(user.orderId === request.body.orderId){
+                        io.socket(user).emit('msg', request.body.status)
+                        console.log('test')
+                    }
+                }
+
+                //displaying the update message
                 console.log('Order Updated')
                 return response.status(201).send({status: 1, message: 'Order Updated'})
+                
+               
             })
             .catch(() => {
                 console.log('Order Updated')
