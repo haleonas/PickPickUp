@@ -3,6 +3,9 @@ const sqlite = require('sqlite')
 const sqlite3 = require('sqlite3')
 const cors = require('cors')
 const fileUpload = require('express-fileupload')
+const QRCode = require('qrcode')
+
+
 
 const app = express()
 const server = require('http').createServer(app)
@@ -25,13 +28,13 @@ server.listen(3000, () => {
 })
 
 io.on('connection', (socket) => {
-
+    console.log('test')
     //data is an object that we receive from a client
 
     socket.on('userOrder', (data) => {
         var user = {}
-        //socket or socket.id?
-        user['user'] = socket
+        user = socket.id
+        user['user'] = socket.id
         user['orderId'] = data.orderId
         user['status'] = data.status
         connectedUsers.push(user)
@@ -169,31 +172,6 @@ app.put('/orders', (request, response) => {
         .catch(() => {
             response.send('NAY')
         })
-
-    socket.on('userObj', async () => {
-
-        var ordId = request.body.orderId
-       
-        //finding the correct object in the array
-        let obj = connectedUsers.find(obj => obj.order == ordId)
-
-        switch (obj.status) {
-            case 1:
-                //sending message from a server to a customer
-                io.sockets.socket(socket.id).emit('userObj', { message: 'Your order has been declined' })
-                break;
-            case 2:
-                io.sockets.socket(socket.id).emit('userObj', { message: 'We are currently working on your order' })
-                break;
-            case 3:
-                //code for qr code?
-                io.sockets.socket(socket.id).emit('userObj', { message: 'Your order has been completed' })
-                break;
-            default:
-                '?'
-        }
-
-    })
 
 })
 
