@@ -50,7 +50,7 @@
                     "body": JSON.stringify(this.productObject)
                 })
                 const data = response.json()
-                if (data['message'] === -1) {
+                if (data['status'] === -1) {
                     alert('Something went wrong')
                 } else {
                     await this.$router.push({path: "/products"})
