@@ -1,23 +1,22 @@
 <template>
-    <div id="edit-offer">
-        <app-header title-text="Edit Offer"></app-header>
-        <form class="edit-offer-form">
+    <div id="delete-offer">
+        <app-header title-text="Delete Offer"></app-header>
+        <form class="delete-offer-form">
             <b-input v-model="offerId" type="number"/>
             <button @click.prevent="setOfferID">Select</button>
         </form>
 
-        <form class="edit-offer-form" v-if="offer.offerId">
+        <form class="delete-offer-form" v-if="offer.offerId">
             <p>
                 <b-field label="Name of Offer: ">
-                    <b-input v-model="offer.name"/>
+                    <div>{{offer.name}}</div>
                 </b-field>
 
             </p>
 
             <p>
                 <b-field label="Offer Description">
-                    <b-input type="textarea" v-model="offer.description">
-                    </b-input>
+                    <div>{{offer.description}}</div>
                 </b-field>
                 <br>
             </p>
@@ -39,16 +38,11 @@
                         :icon-next="nextIcon">
                 </b-pagination>
 
-                <div v-for="(offerProduct,index) in paginatedItems" :key="offerProduct.productId">
+                <div v-for="(offerProduct) in paginatedItems" :key="offerProduct.productId">
                     Product name: {{offerProduct.name}}
                     <br>
                     Price: {{offerProduct.price}}
                     <br>
-                    <b-field>
-                        <b-input type="number" min="0" @change.native="calcTotal"
-                                 v-model="amounts[`price${index}`]"></b-input>
-                    </b-field>
-                    <hr>
                 </div>
 
                 <b-pagination
@@ -67,25 +61,16 @@
 
 
             </div>
-
             Total cost of products: {{totalsum}}
             <br>
             <b-field label="Price for the offer:">
-                <b-input type="number" min="0" v-model="offer.offerPrice"/>
+            <div>{{offer.offerPrice}}</div>
             </b-field>
             <br>
-            <button @click.prevent="editOffer" id="edit-offer-btn">Edit</button>
             <button @click.prevent="deleteOffer" id="delete-offer-btn">Delete</button>
             <div v-if="sendError">Fields incorrectly filled</div>
 
         </form>
-
-
-        <!-- <form class="edit-offer-form">
-
-
-
-        </form> -->
     </div>
 </template>
 
@@ -94,7 +79,7 @@
     import Header from "../components/Header";
 
     export default {
-        name: "EditOffer",
+        name: "DeleteOffer",
         data() {
             return {
 
@@ -149,7 +134,7 @@
             },
 
             setTitle() {
-                document.title = 'Edit Offer';
+                document.title = 'Delete Offer';
             },
 
             setOfferID() {
@@ -187,49 +172,6 @@
 
             },
 
-            async editOffer() {
-                if (this.offer.name && this.offer.description) {
-                    console.log('hi')
-                    let offer = {}
-                    offer['name'] = this.offer.name
-                    offer['description'] = this.offer.description
-                    if (this.offerPrice >= 1) {
-                        offer['offerPrice'] = this.totalsum
-                    } else {
-                        offer['offerPrice'] = this.offer.offerPrice
-                    }
-
-                    let products = []
-
-                    for (let i = 0; i < this.offerProducts.length; ++i) {
-                        if (this.amounts[`price${i}`] !== 0) {
-                            products.push({
-                                productId: this.offerProducts[i]['productId'],
-                                amount: this.amounts[`price${i}`]
-                            })
-                        }
-                    }
-                    console.log()
-
-                    if (products.length > 0) {
-                        const response = await axios.put('http://localhost:3000/editoffer', {
-                            offerId: this.offer.offerId,
-                            offer,
-                            products
-                        })
-
-                        if (response.data.status === 1) {
-                            await this.$router.push({path: '/offers'})
-                        } else {
-                            alert('Something went wrong')
-                        }
-                    } else {
-                        this.sendError = true
-                    }
-                } else {
-                    this.sendError = true
-                }
-            },
                 async deleteOffer() {
                 const response = await fetch("http://localhost:3000/offers", {
                     "method": "DELETE",
@@ -254,14 +196,14 @@
 </script>
 
 <style scoped>
-    #edit-offer {
+    #delete-offer {
         display: flex;
         flex-direction: column;
         flex-basis: 100%;
         justify-content: center;
     }
 
-    .edit-offer-form {
+    .delete-offer-form {
         width: 25%;
         background: #EAFAFF;
         box-shadow: .15em .15em #d1d1d1;
@@ -271,7 +213,7 @@
         margin-top: 1.5em;
     }
 
-    #edit-offer-btn {
+    #delete-offer-btn {
         margin-top: 1.5em;
     }
 

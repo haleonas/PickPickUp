@@ -6,8 +6,10 @@ import Products from '../views/Products.vue'
 import CreateProduct from '../views/CreateProduct.vue'
 import AddOffer from "../views/AddOffer"
 import EditOffer from "../views/EditOffer"
-import Orders from "../views/Orders";
+import Orders from "../views/Orders"
 import EditProduct from "../views/EditProduct";
+import DeleteOffer from "../views/DeleteOffer"
+
 
 Vue.use(VueRouter)
 
@@ -41,6 +43,12 @@ const routes = [
     path: '/editoffer',
     name: 'EditOffer',
     component: EditOffer
+  }
+  ,
+  {
+    path: '/deleteoffer',
+    name: 'DeleteOffer',
+    component: DeleteOffer
   },
   {
     path: '/orders',
