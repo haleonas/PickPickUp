@@ -98,8 +98,6 @@
                     }
                 })
                 this.products = response.data
-
-
             },
             async acceptOrder() {
                 //skicka status (in progress) till servern
@@ -107,7 +105,7 @@
                     orderId: this.order.orderId,
                     status: 'in progress'
                 })
-                if (response.data === 'YAY') {
+                if (response.data.status === 1) {
                     this.accepted = 'yes'
                     this.$router.go(0)
                 }
@@ -119,7 +117,7 @@
                     status: 'declined'
                 })
 
-                if (response.data === 'YAY') {
+                if (response.data.status === 1) {
                     this.accepted = 'no'
                     this.$router.go(0)
                 }

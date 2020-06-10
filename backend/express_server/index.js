@@ -20,11 +20,10 @@ app.use(cors(), express.json(), fileUpload())
 let connectedUsers = []
 
 
-
 let database_
 
 sqlite
-    .open({ driver: sqlite3.Database, filename: './db/pickpickup.sqlite' })
+    .open({driver: sqlite3.Database, filename: './db/pickpickup.sqlite'})
     .then(database => {
         database_ = database
     })
@@ -36,23 +35,20 @@ server.listen(3000, () => {
 
 //implementing socket
 io.on('connection', (socket) => {
-    socket.emit('msg','Test') 
-    console.log('Test')
+    //socket.emit('msg','Test')
 
     socket.on('userOrder', (data) => {
         var user = {}
-        user = socket.id
         user['user'] = socket.id
         user['orderId'] = data.orderId
-        user['status'] = data.status
         connectedUsers.push(user)
+        console.log('CONNECTED USERS: ', connectedUsers)
     })
-
 })
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
-  });
+});
 
 app.get('/', (request, response) => {
     response.send('Hello from Pick & Pick up server')
@@ -190,12 +186,13 @@ app.get('/orders', (request, response) => {
 })
 
 app.post('/orders', async (request, response) => {
-    await database_.run('INSERT INTO orders(userId,status,qrCode,amount,offerid,orderTime) VALUES(?,?,?,?,?,?);', [request.body.orderedBy, 'awaiting response', 'temp', request.body.amount, request.body.offerId, request.body.timeStamp])
+    await database_.run('INSERT INTO orders(userId,status,qrCode,amount,offerid,orderTime) VALUES(?,?,?,?,?,?);', [request.body.userId, 'awaiting response', 'temp', request.body.amount, request.body.offerId, request.body.orderTime])
         .then(() => {
             console.log('Order added')
-            return response.status(201).send({status: 1, message: 'Order added'})
+            //return response.status(201).send({status: 1, message: 'Order added'})
         })
         .catch((error) => {
+            console.log(error)
             console.log('Order couldn\'t be added')
             return response.status(201).send({status: -1, message: error})
         })
@@ -203,7 +200,7 @@ app.post('/orders', async (request, response) => {
     await database_.all('SELECT * FROM orders WHERE orderId = (SELECT MAX(orderId) from orders)')
         .then((rows) => {
             console.log('Order Sent')
-            return response.status(201).send(rows)
+            return response.status(201).send(rows[0])
         }).catch((error) => {
             console.log('Order couldn\'t be added')
             return response.status(201).send({status: -1, message: error})
@@ -214,40 +211,27 @@ app.post('/orders', async (request, response) => {
 
 app.put('/orders', (request, response) => {
     //orderId & status
-    if (request.body.userId) {
-        database_.run('UPDATE orders SET status = ? where orderId = ?', [request.body.status, request.body.userId])
-            .then(() => {
+    database_.run('UPDATE orders SET status = ? where orderId = ?', [request.body.status, request.body.orderId])
+        .then(() => {
+            const orderId = Number(request.body.orderId)
+            const user = connectedUsers.filter(obj => obj.orderId === orderId)[0]
+            const socketId = user.user
 
-                 //socket
-                 for( user in connectedUsers){
-                    console.log('test')
-                    if(user.orderId === request.body.orderId){
-                        io.socket(user).emit('msg', request.body.status)
-                        console.log('test')
-                    }
-                }
+            io.to(socketId).emit('msg', {
+                orderId,
+                status: request.body.status
+            })
 
-                //displaying the update message
-                console.log('Order Updated')
-                return response.status(201).send({status: 1, message: 'Order Updated'})
-                
-               
-            })
-            .catch(() => {
-                console.log('Order Updated')
-                return response.status(201).send({status: 1, message: 'Order Updated'})
-            })
-    } else {
-        database_.run('UPDATE orders SET status = ? where orderId = ?', [request.body.status, request.body.orderId])
-            .then(() => {
-                console.log('Order Updated')
-                return response.status(201).send({status: 1, message: 'Order updated'})
-            })
-            .catch((error) => {
-                console.log('Order not Updated')
-                return response.status(401).send({status: 1, message: error})
-            })
-    }
+            //displaying the update message
+            console.log('Order Updated')
+            return response.status(201).send({status: 1, message: 'Order Updated'})
+
+
+        })
+        .catch((error) => {
+            console.log('Order update failed', error)
+            return response.status(500).send({status: 1, message: error})
+        })
 
 })
 
