@@ -3,7 +3,7 @@
         <app-header title-text="Edit Offer"></app-header>
         <form class="edit-offer-form">
             <b-input v-model="offerId" type="number"/>
-            <button @click.prevent="setOfferID">Send</button>
+            <button @click.prevent="setOfferID">Select</button>
         </form>
 
         <form class="edit-offer-form" v-if="offer.offerId">
@@ -74,7 +74,8 @@
                 <b-input type="number" min="0" v-model="offer.offerPrice"/>
             </b-field>
             <br>
-            <button @click.prevent="editOffer" id="edit-offer-btn">Send</button>
+            <button @click.prevent="editOffer" id="edit-offer-btn">Edit</button>
+            <button @click.prevent="deleteOffer" id="delete-offer-btn">Delete</button>
             <div v-if="sendError">Fields incorrectly filled</div>
 
         </form>
@@ -228,6 +229,24 @@
                 } else {
                     this.sendError = true
                 }
+            },
+                async deleteOffer() {
+                const response = await fetch("http://localhost:3000/offers", {
+                    "method": "DELETE",
+                    "headers": {
+                        "content-type": "application/json"
+                    },
+                    "body": JSON.stringify({offerId: this.offer['offerId']})
+                })
+                const data = await response.json()
+
+                if (data['message'] === 1) {
+                    await this.$router.push({path: "/offers"})
+                } else {
+                    alert("Offer Deleted")
+                    await this.$router.push({path: "/offers"})
+
+                }
             }
         }
     }
@@ -253,6 +272,10 @@
     }
 
     #edit-offer-btn {
+        margin-top: 1.5em;
+    }
+
+        #delete-offer-btn {
         margin-top: 1.5em;
     }
 </style>
