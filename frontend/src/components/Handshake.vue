@@ -19,11 +19,6 @@
        Total amount of items: {{orders.amount}}
       
         </div>
-       
-<div @click="onClick">
-        <img alt="HP mark" src="../assets/hat2.jpg" />
-        <h3>{{answer}}</h3>
-      </div>
 
     </div>
 </template>
