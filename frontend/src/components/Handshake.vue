@@ -11,11 +11,11 @@
         <br/>
         <div>
       {{summary}} <br><br>
-      {{summary2}} <br>
+      {{summary2}}
       {{orders.orderId}} <br>
-      {{summary3}} <br>
+      {{summary3}} 
       {{orders.status}}<br>
-      {{summary4}} <br>
+      {{summary4}} 
        {{orders.amount}}
         </div>
 
