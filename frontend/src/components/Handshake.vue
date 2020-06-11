@@ -2,7 +2,7 @@
     <div id="add">
      <h1>Collect your order</h1>
         <br/>
-        <b-field label="Enter your order's id:">
+        <b-field label="Enter your order id:">
             <b-input type="number" v-model="orderNumber" placeholder="Order id..."/>
         </b-field>
          
