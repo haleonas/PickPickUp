@@ -1,6 +1,6 @@
 <template>
     <div id="offer-item">
-
+        <img :src="imageUrl" width="100" height="100">
         <div id="item">
             <p>Id: {{offer.offerId}}</p>
             <p> Name: {{offer.name}} </p>
@@ -12,12 +12,18 @@
 </template>
 
 <script>
-    export default {
-        name: "OfferItem",
+
+  export default {
+    name: "OfferItem",
         props: {
-            offer: {}
-        }
+            offer: Object
+},
+    data() {
+        return {
+imageUrl: 'http://localhost:3000/pictures?image=${this.offer.offerPicture}'
+}
     }
+        }
 
 </script>
 
