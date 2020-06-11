@@ -5,19 +5,18 @@
         <b-field label="Enter your order's id:">
             <b-input type="number" v-model="orderNumber" placeholder="Order id..."/>
         </b-field>
+         
         <button @click="collectOrder">PickUp</button>
         <br/>
         <br/>
         <div>
-
-      <p>  Thank you for using Pick&PickUp </p>
-        Please find below your order details<br/>
-      
-       Your order status: {{orders.status}} <br/>
-       Your personal id: {{orders.userId}} <br/>
-       Your order id: {{orders.orderId}} <br/>
-       Total amount of items: {{orders.amount}}
-      
+      {{summary}} <br><br>
+      {{summary2}} <br>
+      {{orders.orderId}} <br>
+      {{summary3}} <br>
+      {{orders.status}}<br>
+      {{summary4}} <br>
+       {{orders.amount}}
         </div>
 
     </div>
@@ -32,9 +31,11 @@ export default {
     data() {
         return {
             orderNumber: 3,
-            orders: []
-            
-          
+            orders: [],
+            summary: "",    
+            summary2: "",
+            summary3: "",
+            summary4:""      
         }
     },
 
@@ -43,17 +44,21 @@ export default {
            fetch("http://localhost:3000/orders")
                     .then(response => response.json())
                     .then(result => {
-console.log(result)
+                     console.log(result)
                      for(var i = 0; i < result.length; i++){
                          if(this.orderNumber === result[i].orderId && result[i].status === 'completed')
                          {
                          this.orders = result[i]
-                     
                           
                      }
                      }
             
                     })
+
+                    this.summary = 'Thank you for using Pick&PickUp. Please find below your order details'
+                    this.summary2 = ' Your order id:'
+                    this.summary3 = ' Your order status:'
+                    this.summary4 = ' Total amount of ordered items:'
 
        }
 
