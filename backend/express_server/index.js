@@ -347,3 +347,12 @@ app.put('/editoffer', (request, response) => {
     })
 
 })
+
+app.get('/pictures', (request, response) => {
+    response.sendFile(_dirname + 'assets/' + request.query.offerPicture)
+    })
+    .catch((error) => {
+    console.log('Failed to upload picture')
+    return response.send({message: error})
+    })
+
