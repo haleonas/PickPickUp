@@ -7,8 +7,10 @@ import CreateProduct from '../views/CreateProduct.vue'
 import AddOffer from "../views/AddOffer"
 import EditOffer from "../views/EditOffer"
 import Orders from "../views/Orders"
-import EditProduct from "../views/EditProduct";
+import EditProduct from "../views/EditProduct"
 import DeleteOffer from "../views/DeleteOffer"
+import HandshakeQR from "../views/HandshakeQR"
+
 
 
 Vue.use(VueRouter)
@@ -60,7 +62,14 @@ const routes = [
     name: 'EditProduct',
     component: EditProduct,
     props: true
+  },
+  {
+    path: '/pickup',
+    name: 'PickUp',
+    component: HandshakeQR,
+
   }
+  
 ]
 
 const router = new VueRouter({
