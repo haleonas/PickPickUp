@@ -57,7 +57,7 @@ export default {
           });
 
         this.summary =
-          "Thank you for using Pick&PickUp. Please find below your order details";
+          "Thank you for using Pick&PickUp. Your order details:";
         this.summary2 = " Your order id:";
         this.summary3 = " Your order status:";
         this.summary4 = " Total amount of ordered items:";

@@ -1,7 +1,7 @@
 <template>
-    <div id="handshake">
+    <div id="handshakeQR">
     <app-header title-text="PickUp"></app-header>
-    <handshake></handshake>
+    <handshake id="handshake"></handshake>
     </div>
 </template>
 
@@ -20,6 +20,19 @@ export default {
 </script>
 
 <style scoped>
-
+ #handshakeQR{
+        display: flex;
+        flex-direction: column;
+        flex-basis: 100%;
+        justify-content: center;
+    }
+    #handshake{
+        width: 25%;
+        background: #EAFAFF;
+        box-shadow: .15em .15em #d1d1d1;
+        padding: 1.5em;
+        border-radius: 20px;
+        align-self: center;
+    }
 
 </style>
