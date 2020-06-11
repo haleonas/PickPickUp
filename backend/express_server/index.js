@@ -108,7 +108,7 @@ app.get('/offers', (request, response) => {
             })
 
     } else {
-        database_.all('select offers.offerId, offers.name,offers.description, offers.offerPrice, group_concat(p.name) as products from offers inner join offersProducts oP on offers.offerId = oP.offerId inner join products p on oP.productId = p.productId group by offers.offerId;')
+        database_.all('select offers.offerId, offers.name,offers.description, offers.offerPrice, offers.offerPicture,group_concat(p.name) as products from offers inner join offersProducts oP on offers.offerId = oP.offerId inner join products p on oP.productId = p.productId group by offers.offerId;')
             .then((rows) => {
                 console.log('Sending all offers')
                 return response.status(201).send(rows)
@@ -131,10 +131,10 @@ app.post('/offers', (request, response) => {
             for (let i = 0; i < products.length; ++i) {
                 database_.run('INSERT INTO offersProducts(offerId,productId,amount) VALUES(?,?,?)', [lastId, products[i].productId, products[i].amount])
                     .catch((error) => {
-                        return response.status(401).send()
+                        return response.status(401).send({status: -1, message: error})
                     })
             }
-            return response.send({message: 1})
+            return response.send({status: 1, message: 'Offer added'})
         }).catch((error) => {
         response.status(401).send({status: -1, message: error})
     })
@@ -266,16 +266,24 @@ app.delete('/products', (request, response) => {
 
 app.delete('/offers', (request, response) => {
     database_.all('DELETE FROM offers where offerId = ?',
-    [request.body.offerId])
-        .then(rows => {
+        [request.body.offerId])
+        .then(() => {
             console.log('Offer Deleted')
-            return response.status(201).send(rows)
         })
         .catch((error) => {
             console.log('Couldn\'t retrieve offer')
             return response.status(401).send({status: -1, message: error})
         })
 
+    database_.all('Delete from offersProducts where offerId = ?', [request.body.offerId])
+        .then(() => {
+            console.log('Offersproduct Deleted')
+            return response.status(201).send({status: 1, message: 'Offer removed'})
+        })
+        .catch((error) => {
+            console.log(error)
+            return response.status(401).send({status: -1, message: error})
+        })
 })
 
 
@@ -292,8 +300,6 @@ app.delete('/products', (request, response) => {
         })
 
 })
-
-
 
 
 app.post('/register', (request, response) => {
@@ -349,10 +355,5 @@ app.put('/editoffer', (request, response) => {
 })
 
 app.get('/pictures', (request, response) => {
-    response.sendFile(_dirname + 'assets/' + request.query.offerPicture)
-    })
-    .catch((error) => {
-    console.log('Failed to upload picture')
-    return response.send({message: error})
-    })
-
+    response.sendFile(__dirname + '/assets/' + request.query.image)
+})

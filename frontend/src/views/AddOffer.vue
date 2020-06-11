@@ -181,9 +181,7 @@
                 const formData = new FormData()
                 formData.append('image', this.picture)
 
-                const response = axios.post('http://localhost:3000/upload', formData)
-
-                console.log(response.data)
+                await axios.post('http://localhost:3000/upload', formData)
             },
             setTitle() {
                 document.title = 'Add offer'

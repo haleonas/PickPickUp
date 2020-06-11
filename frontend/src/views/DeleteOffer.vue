@@ -182,8 +182,8 @@
                 })
                 const data = await response.json()
 
-                if (data['message'] === 1) {
-                    await this.$router.push({path: "/offers"})
+                if (data['status'] === -1) {
+                    console.log(data.message)
                 } else {
                     alert("Offer Deleted")
                     await this.$router.push({path: "/offers"})
