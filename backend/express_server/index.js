@@ -159,9 +159,9 @@ app.post('/upload', (request, response) => {
 
 app.get('/orders', (request, response) => {
 
-    //if request.body has a user id send the users order instead of all
-    if (request.body.userId) {
-        database_.all('SELECT * FROM orders where userId = ?', [request.body.userId])
+
+    if (request.query.userId) {
+        database_.all('SELECT orderId,status,userId,qrCode,amount,orderTime, o.name FROM orders inner join offers o on orders.offerId = o.offerId where userId = ?', [request.query.userId])
             .then((rows) => {
                 console.log('Sending order')
                 return response.status(201).send(rows)
