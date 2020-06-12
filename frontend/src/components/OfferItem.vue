@@ -12,17 +12,18 @@
 </template>
 
 <script>
-    export default {
-        name: "OfferItem",
+
+  export default {
+    name: "OfferItem",
         props: {
-            offer: {}
-        },
-        data() {
-            return {
-                imageUrl: `http://localhost:3000/pictures?image=${this.offer.offerPicture}`,
-            }
-        }
+            offer: Object
+},
+    data() {
+        return {
+imageUrl: 'http://localhost:3000/pictures?image=${this.offer.offerPicture}'
+}
     }
+        }
 
 </script>
 
@@ -38,8 +39,7 @@
         padding: .5em;
         display: flex;
     }
-
-    #item {
+    #item{
         display: flex;
         flex-direction: column;
         align-items: flex-start;
