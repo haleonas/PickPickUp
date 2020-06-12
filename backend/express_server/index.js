@@ -158,8 +158,6 @@ app.post('/upload', (request, response) => {
 })
 
 app.get('/orders', (request, response) => {
-
-
     if (request.query.userId) {
         database_.all('SELECT orderId,status,userId,qrCode,amount,orderTime, o.name FROM orders inner join offers o on orders.offerId = o.offerId where userId = ?', [request.query.userId])
             .then((rows) => {
@@ -181,8 +179,6 @@ app.get('/orders', (request, response) => {
                 return response.status(401).send({status: -1, message: error})
             })
     }
-
-
 })
 
 app.post('/orders', async (request, response) => {
