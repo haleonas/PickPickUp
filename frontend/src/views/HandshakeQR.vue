@@ -1,32 +1,33 @@
 <template>
     <div id="handshakeQR">
-    <app-header title-text="PickUp"></app-header>
-    <handshake id="handshake"></handshake>
+        <app-header title-text="PickUp"></app-header>
+        <handshake id="handshake"></handshake>
     </div>
 </template>
 
 <script>
-import Header from '../components/Header.vue'
-import Handshake from '../components/Handshake.vue';
+    import Header from '../components/Header.vue'
+    import Handshake from '../components/Handshake.vue';
 
-export default {
+    export default {
         name: 'HandshakeQR',
         components: {
             'appHeader': Header,
             'handshake': Handshake
         },
-}
+    }
 
 </script>
 
 <style scoped>
- #handshakeQR{
+    #handshakeQR {
         display: flex;
         flex-direction: column;
         flex-basis: 100%;
         justify-content: center;
     }
-    #handshake{
+
+    #handshake {
         width: 25%;
         background: #EAFAFF;
         box-shadow: .15em .15em #d1d1d1;

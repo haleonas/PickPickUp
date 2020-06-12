@@ -20,7 +20,7 @@
         },
         data() {
             return {
-                imageUrl: 'http://localhost:3000/pictures?image=${this.offer.offerPicture}'
+                imageUrl: `http://localhost:3000/pictures?image=${this.offer.offerPicture}`
             }
         }
     }
