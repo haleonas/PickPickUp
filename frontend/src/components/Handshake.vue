@@ -45,7 +45,7 @@
 
         methods: {
             async collectOrder() {
-                if (this.orderNumber) {
+                if (this.orderNumber > 0) {
                     fetch("http://localhost:3000/orders")
                         .then(response => response.json())
                         .then(result => {
@@ -69,14 +69,14 @@
                     alert("Please enter your order id");
                 }
 
-
-                const response = await axios.put("http://localhost:3000/orders", {
-                    orderId: this.orders.orderId,
-                    status: "collected"
-                });
-
-                if (response.data === "Update has been successful") {
-                    this.$router.go(0);
+                if(this.orders.status === 'completed'){
+                    const response = await axios.put("http://localhost:3000/orders", {
+                        orderId: this.orders.orderId,
+                        status: "collected"
+                    });
+                    if (response.data === "Update has been successful") {
+                        this.$router.go(0);
+                    }
                 }
             }
         }
