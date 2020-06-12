@@ -3,7 +3,7 @@
 
         <p> Id: {{order.orderId}}</p>
         <p> Status: {{order.status}}</p>
-        <p> Ordered By: {{order.orderedBy}}</p>
+        <p> Ordered By: {{order.userId}}</p>
         <p> Amount: {{order.amount}}</p>
         <p> Offer: {{offer.name}}</p>
         <p> Total price: {{(offer.offerPrice * order.amount).toFixed(2)}}:-</p>
@@ -13,8 +13,8 @@
         <li v-for="(product,index) in products" :key="index">
             {{product.amount * order.amount}} {{product.name}}/s
         </li>
-        <section v-if="order.status !=='completed' && order.status !=='declined'">
-            <span v-if="!accepted && order.status !=='in progress' ">
+        <section v-if="order.status !=='completed' && order.status !=='declined' && order.status !== 'collected'">
+            <span v-if="accepted === 'no' && order.status !=='in progress' ">
                 <button @click="acceptOrder"> Accept</button> <button @click="declineOrder"> Decline</button>
             </span>
             <span v-if="accepted === 'yes' && !completed && order.status ==='in progress'">
@@ -36,7 +36,7 @@
                 offer: {},
                 timeMessage: "",
                 deliveryTime: Date,
-                accepted: "",
+                accepted: "no",
                 completed: false
             }
         },
@@ -75,9 +75,7 @@
                         break
                     }
                 }
-
                 this.deliveryTime = moment.unix(this.order.orderTime).format('DD-MM-YYYY HH:mm:ss')
-
             },
             async getOffer() {
                 const response = await axios.get('http://localhost:3000/offers', {
@@ -100,7 +98,6 @@
                 this.products = response.data
             },
             async acceptOrder() {
-                //skicka status (in progress) till servern
                 const response = await axios.put('http://localhost:3000/orders', {
                     orderId: this.order.orderId,
                     status: 'in progress'

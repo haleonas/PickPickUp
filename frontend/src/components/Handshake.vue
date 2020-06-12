@@ -46,7 +46,7 @@
         methods: {
             async collectOrder() {
                 if (this.orderNumber > 0) {
-                    fetch("http://localhost:3000/orders")
+                    await fetch("http://localhost:3000/orders")
                         .then(response => response.json())
                         .then(result => {
 
