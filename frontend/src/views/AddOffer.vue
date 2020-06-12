@@ -140,14 +140,13 @@
                     if (this.picture) {
                         offer['offerPicture'] = this.picture.name
                     } else {
-                        offer['offerPicture'] = "null"
+                        offer['offerPicture'] = "no_image.jpg"
                     }
                     if (this.offerPrice >= 1) {
                         offer['offerPrice'] = this.offerPrice
                     } else {
                         offer['offerPrice'] = this.total
                     }
-
                     let products = []
 
                     for (let i = 0; i < this.products.length; ++i) {
