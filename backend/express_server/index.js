@@ -158,7 +158,6 @@ app.post('/upload', (request, response) => {
 })
 
 app.get('/orders', (request, response) => {
-
     //if request.body has a user id send the users order instead of all
     if (request.body.userId) {
         database_.all('SELECT * FROM orders where userId = ?', [request.body.userId])
