@@ -193,7 +193,7 @@ app.post('/orders', async (request, response) => {
             return response.status(201).send({status: -1, message: error})
         })
 
-    await database_.all('SELECT * FROM orders WHERE orderId = (SELECT MAX(orderId) from orders)')
+    await database_.all('SELECT orderId, status, userId, amount, orderTime,orders.offerId,offers.offerPrice FROM orders INNER JOIN offers ON orders.offerId = offers.offerId WHERE orderId = (SELECT MAX(orderId) FROM orders)')
         .then((rows) => {
             console.log('Order Sent')
             return response.status(201).send(rows[0])
@@ -201,8 +201,22 @@ app.post('/orders', async (request, response) => {
             console.log('Order couldn\'t be added')
             return response.status(201).send({status: -1, message: error})
         })
+})
 
-
+app.delete('/orders', (request, response) => {
+    database_.run('DELETE FROM orders WHERE userId = ? AND orderId = ?', [request.query.userId, request.query.orderId])
+        .then(() => {
+            database_.run('SELECT orderId, status, userId, amount, orderTime,orders.offerId,offers.offerPrice FROM orders INNER JOIN offers ON orders.offerId = offers.offerId WHERE userId = ?', [request.query.userId])
+                .then((rows) => {
+                    response.status(201).send(rows)
+                })
+                .catch((error) => {
+                    response.status(401).send({status: -1, message: error})
+                })
+        })
+        .catch((error) => {
+            response.status(401).send({status: -1, message: error})
+        })
 })
 
 app.put('/orders', (request, response) => {
