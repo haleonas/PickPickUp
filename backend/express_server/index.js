@@ -270,9 +270,7 @@ app.delete('/products', (request, response) => {
             console.log('Product not deleted')
             return response.send({status: -1, message: 'Product not deleted'})
         })
-
 })
-
 
 app.delete('/offers', (request, response) => {
     database_.all('DELETE FROM offers where offerId = ?',
@@ -297,19 +295,6 @@ app.delete('/offers', (request, response) => {
 })
 
 
-app.delete('/products', (request, response) => {
-    database_.run('DELETE FROM products where productId = ?',
-        [request.body.productId])
-        .then(() => {
-            console.log('Product deleted')
-            return response.status(201).send({status: 1, message: 'Product deleted'})
-        })
-        .catch(() => {
-            console.log('Product not deleted')
-            return response.send({status: -1, message: 'Product not deleted'})
-        })
-
-})
 
 
 app.post('/register', (request, response) => {
