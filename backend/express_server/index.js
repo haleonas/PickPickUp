@@ -15,7 +15,7 @@ const limiter = rateLimit({
     //5request per minutes
 })
 
-app.use(cors(), express.json(), fileUpload())
+app.use(cors(), express.json(), fileUpload(),express.static('assets'))
 
 let connectedUsers = []
 
@@ -98,7 +98,7 @@ app.get('/offerproducts', (request, response) => {
 
 app.get('/offers', (request, response) => {
     if (request.query.offerId) {
-        database_.all('select * from offers where offers.offerId = ?;', [request.query.offerId])
+        database_.all('SELECT * FROM offers WHERE offers.offerId = ?;', [request.query.offerId])
             .then((rows) => {
                 console.log('sending all offer')
                 return response.status(201).send(rows)
@@ -206,7 +206,7 @@ app.post('/orders', async (request, response) => {
 app.delete('/orders', (request, response) => {
     database_.run('DELETE FROM orders WHERE userId = ? AND orderId = ?', [request.query.userId, request.query.orderId])
         .then(() => {
-            database_.run('SELECT orderId, status, userId, amount, orderTime,orders.offerId,offers.offerPrice FROM orders INNER JOIN offers ON orders.offerId = offers.offerId WHERE userId = ?', [request.query.userId])
+            database_.all('SELECT orderId, status, userId, amount, orderTime,orders.offerId,offers.offerPrice FROM orders INNER JOIN offers ON orders.offerId = offers.offerId WHERE userId = ?', [request.query.userId])
                 .then((rows) => {
                     response.status(201).send(rows)
                 })
