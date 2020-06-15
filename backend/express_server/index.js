@@ -15,7 +15,7 @@ const limiter = rateLimit({
     //5request per minutes
 })
 
-app.use(cors(), express.json(), fileUpload(),express.static('assets'))
+app.use(cors(), express.json(), fileUpload(), express.static('assets'))
 
 let connectedUsers = []
 
@@ -38,10 +38,24 @@ io.on('connection', (socket) => {
     //socket.emit('msg','Test')
 
     socket.on('userOrder', (data) => {
+        console.log('New order: ', data)
         var user = {}
         user['user'] = socket.id
         user['orderId'] = data.orderId
-        connectedUsers.push(user)
+
+        if (connectedUsers.filter(conUser => conUser.orderId === data.orderId)) {
+            connectedUsers = connectedUsers.filter(conUser => conUser.orderId !== data.orderId);
+            connectedUsers.push(user)
+        } else {
+            connectedUsers.push(user)
+        }
+
+        console.log('CONNECTED USERS: ', connectedUsers)
+    })
+
+    socket.on('disconnect', () => {
+        connectedUsers = connectedUsers.filter(user => user.user !== socket.id)
+        console.log('User disconnected: ', socket.id)
         console.log('CONNECTED USERS: ', connectedUsers)
     })
 })
@@ -159,7 +173,7 @@ app.post('/upload', (request, response) => {
 
 app.get('/orders', (request, response) => {
     if (request.query.userId) {
-        database_.all('SELECT orderId,status,userId,qrCode,amount,orderTime, o.name FROM orders inner join offers o on orders.offerId = o.offerId where userId = ?', [request.query.userId])
+        database_.all('SELECT orderId,status,userId,qrCode,amount,orderTime, o.name,o.offerPrice FROM orders inner join offers o on orders.offerId = o.offerId where userId = ?', [request.query.userId])
             .then((rows) => {
                 console.log('Sending order')
                 return response.status(201).send(rows)
@@ -293,9 +307,6 @@ app.delete('/offers', (request, response) => {
             return response.status(401).send({status: -1, message: error})
         })
 })
-
-
-
 
 app.post('/register', (request, response) => {
     database_.run('insert into user(username,password) values(?,?)',

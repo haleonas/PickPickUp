@@ -127,7 +127,7 @@
                     status: 'completed'
                 })
 
-                if (response.data === 'YAY') {
+                if (response.data.status === 1) {
                     this.completed = true
                     this.$router.go(0)
                 }
