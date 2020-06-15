@@ -122,7 +122,7 @@ app.get('/offers', (request, response) => {
             })
 
     } else {
-        database_.all('select offers.offerId, offers.name,offers.description, offers.offerPrice, offers.offerPicture,group_concat(p.name) as products from offers inner join offersProducts oP on offers.offerId = oP.offerId inner join products p on oP.productId = p.productId group by offers.offerId;')
+        database_.all('select offers.offerId, offers.name,offers.description, offers.offerPrice, offers.offerPicture,group_concat(p.name) as products from offers inner join offersProducts oP on offers.offerId = oP.offerId inner join products p on oP.productId = p.productId group by offers.offerId order BY offers.offerId desc')
             .then((rows) => {
                 console.log('Sending all offers')
                 return response.status(201).send(rows)
@@ -173,7 +173,7 @@ app.post('/upload', (request, response) => {
 
 app.get('/orders', (request, response) => {
     if (request.query.userId) {
-        database_.all('SELECT orderId,status,userId,qrCode,amount,orderTime, o.name,o.offerPrice FROM orders inner join offers o on orders.offerId = o.offerId where userId = ?', [request.query.userId])
+        database_.all('SELECT orderId,status,userId,qrCode,amount,orderTime, o.name,o.offerPrice FROM orders inner join offers o on orders.offerId = o.offerId where userId = ? ORDER BY orderId DESC' , [request.query.userId])
             .then((rows) => {
                 console.log('Sending order')
                 return response.status(201).send(rows)
@@ -183,7 +183,8 @@ app.get('/orders', (request, response) => {
                 return response.status(401).send({status: -1, message: error})
             })
     } else {
-        database_.all('SELECT * FROM orders order by case when status = \'in progress\' then 1 when status = \'declined\' then 2 when status = \'completed\' then 3 end;')
+        //case when status = 'in progress' then 1 when status = 'declined' then 2 when status = 'completed' then 3 end;
+        database_.all('SELECT * FROM orders ORDER BY orderId DESC')
             .then((rows) => {
                 console.log('Sending all orders')
                 return response.status(201).send(rows)
@@ -220,7 +221,7 @@ app.post('/orders', async (request, response) => {
 app.delete('/orders', (request, response) => {
     database_.run('DELETE FROM orders WHERE userId = ? AND orderId = ?', [request.query.userId, request.query.orderId])
         .then(() => {
-            database_.all('SELECT orderId, status, userId, amount, orderTime,orders.offerId,offers.offerPrice FROM orders INNER JOIN offers ON orders.offerId = offers.offerId WHERE userId = ?', [request.query.userId])
+            database_.all('SELECT orderId, status, userId, amount, orderTime,orders.offerId,offers.offerPrice FROM orders INNER JOIN offers ON orders.offerId = offers.offerId WHERE userId = ? ORDER BY orderId DESC', [request.query.userId])
                 .then((rows) => {
                     response.status(201).send(rows)
                 })
