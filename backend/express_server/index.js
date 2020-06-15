@@ -152,7 +152,6 @@ app.post('/offers', (request, response) => {
         }).catch((error) => {
         response.status(401).send({status: -1, message: error})
     })
-
 })
 
 app.post('/upload', (request, response) => {
@@ -341,8 +340,8 @@ app.post('/login', (request, response) => {
 })
 
 app.put('/editoffer', (request, response) => {
-    database_.run('UPDATE offers SET name = ?, description = ?,offerPrice = ? where offerId = ?',
-        [request.body.offer.name, request.body.offer.description, request.body.offer.offerPrice, request.body.offerId])
+    database_.run('UPDATE offers SET name = ?, description = ?,offerPicture = ?,offerPrice = ? where offerId = ?',
+        [request.body.offer.name, request.body.offer.description, request.body.offer.offerPicture, request.body.offer.offerPrice, request.body.offerId])
         .then((rows) => {
             const products = request.body.products
             const offerId = rows.offerId

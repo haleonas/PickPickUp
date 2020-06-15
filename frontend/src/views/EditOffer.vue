@@ -9,7 +9,7 @@
         <form class="edit-offer-form" v-if="offer.offerId">
             <p>
                 <b-field label="Name of Offer: ">
-                    <b-input v-model="offer.name"/>
+                    <b-input v-model="offer.name" />
                 </b-field>
 
             </p>
@@ -64,7 +64,11 @@
                         :icon-prev="prevIcon"
                         :icon-next="nextIcon">
                 </b-pagination>
-
+                <img :src="imageUrl" width="100" height="100">
+                <b-field label="Offer image" enctype="multipart/form-data">
+                    <b-input type="file" name="someExpressFiles" @change.native="onFileSelected"
+                             accept="image/*"></b-input>
+                </b-field>
 
             </div>
 
@@ -95,14 +99,10 @@
 
     export default {
         name: "EditOffer",
+        
         data() {
             return {
-
-                applicants: [
-                    {
-                        msg: ''
-                    }
-                ],
+                imageUrl: "http://localhost:3000/pictures?image=no_image.jpg",
                 offerId: 0,
                 offer: {},
                 offerProducts: [],
@@ -113,6 +113,8 @@
                 totalsum: 0,
                 offerPrice: [],
                 sendError: false,
+                picture: null,
+
 
                 total: 1,
                 current: 1,
@@ -140,7 +142,13 @@
         beforeMount() {
             this.setTitle()
         },
+        mounted() {
+                this.uploadImage()
+        },
         methods: {
+                        onFileSelected(event) {
+                this.picture = event.target.files[0]
+            },
             calcTotal() {
                 this.totalsum = 0
                 for (let i = 0; i < this.offerProducts.length; ++i) {
@@ -156,7 +164,7 @@
 
                 this.getOffer()
                 this.getOfferproducts()
-
+                this.uploadImage()
             },
             async getOffer() {
                 const response = await axios.get('http://localhost:3000/offers', {
@@ -164,6 +172,7 @@
                 })
 
                 this.offer = response.data[0]
+                this.imageUrl = "http://localhost:3000/pictures?image="+this.offer.offerPicture
 
                 console.log(this.offer)
             },
@@ -193,6 +202,11 @@
                     let offer = {}
                     offer['name'] = this.offer.name
                     offer['description'] = this.offer.description
+                                        if (this.picture) {
+                        offer['offerPicture'] = this.picture.name
+                    } else {
+                        offer['offerPicture'] = "no_image.jpg"
+                    }
                     if (this.offerPrice >= 1) {
                         offer['offerPrice'] = this.totalsum
                     } else {
@@ -212,6 +226,9 @@
                     console.log()
 
                     if (products.length > 0) {
+                             if (this.picture) {
+                            await this.uploadImage()
+                        }
                         const response = await axios.put('http://localhost:3000/editoffer', {
                             offerId: this.offer.offerId,
                             offer,
@@ -229,6 +246,14 @@
                 } else {
                     this.sendError = true
                 }
+            },
+            async uploadImage() {
+                const formData = new FormData()
+                formData.append('image', this.picture)
+
+                await axios.post('http://localhost:3000/upload', formData)
+                this.imageUrl = "http://localhost:3000/pictures?image="+this.picture
+
             },
                 async deleteOffer() {
                 const response = await fetch("http://localhost:3000/offers", {
